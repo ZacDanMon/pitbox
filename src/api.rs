@@ -10,7 +10,7 @@ use std::time::Duration;
 
 const BASE_URL: &str = "https://api.jolpi.ca/ergast/f1";
 
-type AppResult<T> = Result<T, Box<dyn std::error::Error>>;
+pub type AppResult<T> = Result<T, Box<dyn std::error::Error>>;
 
 /// Global, lazily‑initialized blocking client.
 /// Reuses TCP pools and applies a 10‑second request timeout.
