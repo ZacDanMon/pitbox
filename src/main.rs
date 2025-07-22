@@ -1,42 +1,26 @@
 mod api;
 mod cli;
 mod models;
+mod output;
 
-use api::{fetch_constructor_standings, fetch_driver_standings};
+use api::AppResult;
 use cli::Cli;
 
-fn main() -> api::AppResult<()> {
+fn main() -> AppResult<()> {
     let args = Cli::parse();
 
     // default: if no flag is supplied, just print both.
-    let want_drivers = args.drivers || (!args.drivers && !args.constructors);
-    let want_constructors = args.constructors || (!args.drivers && !args.constructors);
+    let print_driver_standings = args.drivers || (!args.drivers && !args.constructors);
+    let print_constructor_standings = args.constructors || (!args.drivers && !args.constructors);
 
-    if want_drivers {
-        let standings = fetch_driver_standings("current")?;
-        println!("🏁 F1 Drivers Standings\n");
-        for ds in standings {
-            println!(
-                "{}. {} {} — {} pts ({})",
-                ds.position,
-                ds.driver.given_name,
-                ds.driver.family_name,
-                ds.points,
-                ds.driver.nationality
-            );
-        }
-        println!();
+    if print_driver_standings {
+        let standings = api::fetch_driver_standings("current")?;
+        output::print_driver_standings_table(&standings);
     }
 
-    if want_constructors {
-        let standings = fetch_constructor_standings("current")?;
-        println!("🏆 Constructors Standings\n");
-        for cs in standings {
-            println!(
-                "{}. {} — {} pts",
-                cs.position, cs.constructor.name, cs.points,
-            );
-        }
+    if print_constructor_standings {
+        let standings = api::fetch_constructor_standings("current")?;
+        output::print_constructor_standings_table(&standings);
     }
 
     Ok(())
