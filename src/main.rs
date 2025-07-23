@@ -16,12 +16,12 @@ fn main() -> AppResult<()> {
         args.constructor_standings || (!args.driver_standings && !args.constructor_standings);
 
     if print_driver_standings {
-        let standings = api::fetch_driver_standings("current")?;
+        let standings = api::fetch_driver_standings(&args.season)?;
         output::print_driver_standings_table(&standings);
     }
 
     if print_constructor_standings {
-        let standings = api::fetch_constructor_standings("current")?;
+        let standings = api::fetch_constructor_standings(&args.season)?;
         output::print_constructor_standings_table(&standings);
     }
 

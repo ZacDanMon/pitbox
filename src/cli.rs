@@ -4,13 +4,17 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 pub struct Cli {
-    /// Show constructor standings for the current season
+    /// Show constructor standings for the current season.
     #[arg(short = 'c', long = "cstandings")]
     pub constructor_standings: bool,
 
-    /// Show driver standings for the current season
+    /// Show driver standings for the current season.
     #[arg(short = 'd', long = "dstandings")]
     pub driver_standings: bool,
+
+    /// Season to query (current or four digit year).
+    #[arg(short = 's', long = "season", default_value = "current")]
+    pub season: String,
 }
 
 impl Cli {
