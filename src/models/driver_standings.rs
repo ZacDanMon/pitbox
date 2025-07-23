@@ -40,5 +40,5 @@ pub struct DriverStanding {
 pub struct Driver {
     pub given_name: String,
     pub family_name: String,
-    // pub nationality: String,
+    pub nationality: String,
 }

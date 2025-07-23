@@ -4,13 +4,13 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 pub struct Cli {
-    /// Show driver standings for the current season
-    #[arg(short = 'd', long = "drivers")]
-    pub drivers: bool,
-
     /// Show constructor standings for the current season
-    #[arg(short = 'c', long = "constructors")]
-    pub constructors: bool,
+    #[arg(short = 'c', long = "cstandings")]
+    pub constructor_standings: bool,
+
+    /// Show driver standings for the current season
+    #[arg(short = 'd', long = "dstandings")]
+    pub driver_standings: bool,
 }
 
 impl Cli {

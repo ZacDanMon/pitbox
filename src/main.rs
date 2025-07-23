@@ -10,8 +10,10 @@ fn main() -> AppResult<()> {
     let args = Cli::parse();
 
     // default: if no flag is supplied, just print both.
-    let print_driver_standings = args.drivers || (!args.drivers && !args.constructors);
-    let print_constructor_standings = args.constructors || (!args.drivers && !args.constructors);
+    let print_driver_standings =
+        args.driver_standings || (!args.driver_standings && !args.constructor_standings);
+    let print_constructor_standings =
+        args.constructor_standings || (!args.driver_standings && !args.constructor_standings);
 
     if print_driver_standings {
         let standings = api::fetch_driver_standings("current")?;
