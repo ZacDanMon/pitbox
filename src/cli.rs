@@ -1,6 +1,6 @@
 use clap::{ArgGroup, Args, Parser, Subcommand};
 
-/// F1 Standings CLI
+/// Apex F1 CLI
 #[derive(Parser, Debug)]
 #[command(
     author,
