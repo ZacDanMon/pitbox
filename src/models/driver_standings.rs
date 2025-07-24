@@ -29,6 +29,7 @@ pub struct DriverStandingsList {
 
 #[derive(Deserialize)]
 pub struct DriverStanding {
+    #[serde(rename = "positionText")]
     pub position: String,
     pub points: String,
     #[serde(rename = "Driver")]
