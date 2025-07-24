@@ -34,6 +34,8 @@ pub struct DriverStanding {
     pub points: String,
     #[serde(rename = "Driver")]
     pub driver: Driver,
+    #[serde(rename = "Constructors")]
+    pub constructors: Vec<Constructor>,
 }
 
 #[derive(Deserialize)]
@@ -42,4 +44,9 @@ pub struct Driver {
     pub given_name: String,
     pub family_name: String,
     pub nationality: String,
+}
+
+#[derive(Deserialize)]
+pub struct Constructor {
+    pub name: String,
 }
