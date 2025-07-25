@@ -4,7 +4,9 @@ use crate::models::{
 };
 
 use reqwest::{IntoUrl, blocking::Client};
+use serde::Deserialize;
 use serde_json::Value;
+use serde_with::{DisplayFromStr, serde_as};
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -21,6 +23,14 @@ static CLIENT: LazyLock<Client> = LazyLock::new(|| {
         .expect("failed to build reqwest client")
 });
 
+#[serde_as]
+#[derive(Deserialize)]
+struct StandingsData {
+    season: String,
+    #[serde_as(as = "DisplayFromStr")]
+    round: u32,
+}
+
 fn fetch_json(url: impl IntoUrl) -> AppResult<Value> {
     Ok(CLIENT.get(url).send()?.json()?)
 }
@@ -36,7 +46,8 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<DriverStandings> {
         .pointer(LIST)
         .ok_or_else(|| format!("No standings list for season {season}"))?;
 
-    let round = str_as_u32(list, "round")?;
+    let standings_data: StandingsData = serde_json::from_value(list.clone())
+        .map_err(|e| format!("Failed to decode standings data: {e}"))?;
 
     let entries_node = list
         .get("DriverStandings")
@@ -45,7 +56,11 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<DriverStandings> {
     let entries: Vec<DriverEntry> = serde_json::from_value(entries_node.clone())
         .map_err(|e| format!("Failed to decode driver standings: {e}"))?;
 
-    let standings = DriverStandings { round, entries };
+    let standings = DriverStandings {
+        season: standings_data.season,
+        round: standings_data.round,
+        entries,
+    };
 
     Ok(standings)
 }
@@ -61,7 +76,8 @@ pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandin
         .pointer(LIST)
         .ok_or_else(|| format!("No standings list for season {season}"))?;
 
-    let round = str_as_u32(list, "round")?;
+    let standings_data: StandingsData = serde_json::from_value(list.clone())
+        .map_err(|e| format!("Failed to decode standings data: {e}"))?;
 
     let entries_node = list
         .get("ConstructorStandings")
@@ -70,15 +86,10 @@ pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandin
     let entries: Vec<ConstructorEntry> = serde_json::from_value(entries_node.clone())
         .map_err(|e| format!("Failed to decode constructor standings: {e}"))?;
 
-    let standings = ConstructorStandings { round, entries };
+    let standings = ConstructorStandings {
+        season: standings_data.season,
+        round: standings_data.round,
+        entries,
+    };
     Ok(standings)
-}
-
-fn str_as_u32(val: &Value, key: &str) -> AppResult<u32> {
-    let s = val
-        .get(key)
-        .and_then(Value::as_str)
-        .ok_or_else(|| format!("Missing `{key}`"))?;
-
-    Ok(s.parse::<u32>()?)
 }

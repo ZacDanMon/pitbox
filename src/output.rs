@@ -40,7 +40,12 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
             [only] => &only.name,
             [.., last] => &last.name,
         };
-        table.add_row(vec![&e.position, &name, constructor_name, &e.points]);
+        table.add_row(vec![
+            &e.position,
+            &name,
+            constructor_name,
+            &e.points.to_string(),
+        ]);
     }
 
     println!("🏁 F1 Drivers Standings");

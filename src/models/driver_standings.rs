@@ -1,24 +1,33 @@
 use serde::Deserialize;
+use serde_with::{DisplayFromStr, serde_as};
 
+// TODO: Get gaps flag working.
+#[allow(dead_code)]
 pub struct DriverStandings {
+    pub season: String,
     pub round: u32,
     pub entries: Vec<DriverEntry>,
 }
 
+#[serde_as]
 #[derive(Deserialize)]
 pub struct DriverEntry {
     #[serde(rename = "positionText")]
     pub position: String,
-    pub points: String,
+    #[serde_as(as = "DisplayFromStr")]
+    pub points: u32,
     #[serde(rename = "Driver")]
     pub driver: Driver,
     #[serde(rename = "Constructors")]
     pub constructors: Vec<Constructor>,
 }
 
+// TODO: Get gaps flag working.
+#[allow(dead_code)]
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Driver {
+    pub code: String,
     pub given_name: String,
     pub family_name: String,
     pub nationality: String,
