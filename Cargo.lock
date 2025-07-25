@@ -75,6 +75,7 @@ dependencies = [
  "comfy-table",
  "reqwest",
  "serde",
+ "serde_json",
  "toml",
 ]
 

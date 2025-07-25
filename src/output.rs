@@ -1,4 +1,6 @@
-use crate::models::{constructor_standings::ConstructorStanding, driver_standings::DriverStanding};
+use crate::models::{
+    constructor_standings::ConstructorStandings, driver_standings::DriverStandings,
+};
 use comfy_table::{
     ContentArrangement, Table, TableComponent,
     modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS},
@@ -15,7 +17,7 @@ static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
 /// # Arguments
 ///
 /// * 'standings' - slice of DriverStanding struct (position, driver info, points)
-pub fn print_driver_standings_table(standings: &[DriverStanding]) {
+pub fn print_driver_standings_table(standings: DriverStandings) {
     let mut table = Table::new();
 
     table
@@ -26,19 +28,19 @@ pub fn print_driver_standings_table(standings: &[DriverStanding]) {
         .set_content_arrangement(ContentArrangement::Dynamic)
         .set_header(vec!["Pos", "Driver", "Team", "Points"]);
 
-    for s in standings {
+    for e in standings.entries {
         let flag = FLAGS
-            .get(&s.driver.nationality)
+            .get(&e.driver.nationality)
             .map(String::as_str)
             .unwrap_or("");
-        let name = format!("{} {} {flag}", s.driver.given_name, s.driver.family_name);
+        let name = format!("{} {} {flag}", e.driver.given_name, e.driver.family_name);
 
-        let constructor_name: &str = match s.constructors.as_slice() {
+        let constructor_name: &str = match e.constructors.as_slice() {
             [] => "Unknown",
             [only] => &only.name,
             [.., last] => &last.name,
         };
-        table.add_row(vec![&s.position, &name, constructor_name, &s.points]);
+        table.add_row(vec![&e.position, &name, constructor_name, &e.points]);
     }
 
     println!("🏁 F1 Drivers Standings");
@@ -50,7 +52,7 @@ pub fn print_driver_standings_table(standings: &[DriverStanding]) {
 /// # Arguments
 ///
 /// * `standings` - slice of ConstructorStanding struct (position, constructor, points)
-pub fn print_constructor_standings_table(standings: &[ConstructorStanding]) {
+pub fn print_constructor_standings_table(standings: ConstructorStandings) {
     let mut table = Table::new();
 
     table
@@ -61,8 +63,8 @@ pub fn print_constructor_standings_table(standings: &[ConstructorStanding]) {
         .set_content_arrangement(ContentArrangement::Dynamic)
         .set_header(vec!["Pos", "Constructor", "Points"]);
 
-    for s in standings {
-        table.add_row(vec![&s.position, &s.constructor.name, &s.points]);
+    for e in standings.entries {
+        table.add_row(vec![&e.position, &e.constructor.name, &e.points]);
     }
 
     println!("🏆 F1 Constructors Standings");

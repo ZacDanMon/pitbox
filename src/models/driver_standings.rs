@@ -1,34 +1,12 @@
 use serde::Deserialize;
 
-/// Mirrors exactly the JSON you get from `/driverstandings/`
-#[derive(Deserialize)]
-pub struct DriverStandingsResponse {
-    #[serde(rename = "MRData")]
-    pub mr_data: DriverStandingsMRData,
+pub struct DriverStandings {
+    pub round: u32,
+    pub entries: Vec<DriverEntry>,
 }
 
 #[derive(Deserialize)]
-pub struct DriverStandingsMRData {
-    #[serde(rename = "StandingsTable")]
-    pub standings_table: DriverStandingsTable,
-}
-
-#[derive(Deserialize)]
-pub struct DriverStandingsTable {
-    #[serde(rename = "StandingsLists")]
-    pub standings_lists: Vec<DriverStandingsList>,
-}
-
-#[derive(Deserialize)]
-pub struct DriverStandingsList {
-    // pub season: String,
-    // pub round: String,
-    #[serde(rename = "DriverStandings")]
-    pub driver_standings: Vec<DriverStanding>,
-}
-
-#[derive(Deserialize)]
-pub struct DriverStanding {
+pub struct DriverEntry {
     #[serde(rename = "positionText")]
     pub position: String,
     pub points: String,

@@ -35,6 +35,9 @@ pub struct StandingsArgs {
 
     #[arg(short = 's', long = "season", default_value = "current")]
     pub season: String,
+
+    #[arg(short = 'g', long = "gap")]
+    pub gap: bool,
 }
 
 impl Cli {
