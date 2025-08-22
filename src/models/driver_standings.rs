@@ -15,7 +15,7 @@ pub struct DriverEntry {
     #[serde(rename = "positionText")]
     pub position: String,
     #[serde_as(as = "DisplayFromStr")]
-    pub points: u32,
+    pub points: f64,
     #[serde(rename = "Driver")]
     pub driver: Driver,
     #[serde(rename = "Constructors")]
@@ -27,7 +27,7 @@ pub struct DriverEntry {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Driver {
-    pub code: String,
+    pub code: Option<String>,
     pub given_name: String,
     pub family_name: String,
     pub nationality: String,
