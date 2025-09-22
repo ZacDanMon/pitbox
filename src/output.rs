@@ -7,6 +7,9 @@ use comfy_table::{
 };
 use std::{collections::HashMap, sync::LazyLock};
 
+// Remove this substring from constructor names.
+const REMOVE_STR: &str = "F1 Team";
+
 static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     let toml = include_str!("../assets/nationality_flags.toml");
     toml::from_str::<HashMap<String, String>>(toml).expect("Invalid nationality_flag.toml.")
@@ -40,10 +43,13 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
             [only] => &only.name,
             [.., last] => &last.name,
         };
+
+        let constructor_name = constructor_name.replace(REMOVE_STR, "");
+
         table.add_row(vec![
             &e.position,
             &name,
-            constructor_name,
+            &constructor_name,
             &e.points.to_string(),
         ]);
     }
@@ -69,7 +75,8 @@ pub fn print_constructor_standings_table(standings: ConstructorStandings) {
         .set_header(vec!["Pos", "Constructor", "Points"]);
 
     for e in standings.entries {
-        table.add_row(vec![&e.position, &e.constructor.name, &e.points]);
+        let constructor_name = e.constructor.name.replace(REMOVE_STR, "");
+        table.add_row(vec![&e.position, &constructor_name, &e.points]);
     }
 
     println!("🏆 F1 Constructors Standings");
