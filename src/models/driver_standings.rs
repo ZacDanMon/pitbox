@@ -1,3 +1,5 @@
+use crate::models::common::Constructor;
+
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
 
@@ -31,9 +33,4 @@ pub struct Driver {
     pub given_name: String,
     pub family_name: String,
     pub nationality: String,
-}
-
-#[derive(Deserialize)]
-pub struct Constructor {
-    pub name: String,
 }

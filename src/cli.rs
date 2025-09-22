@@ -39,10 +39,3 @@ pub struct StandingsArgs {
     #[arg(short = 'g', long = "gap")]
     pub gap: bool,
 }
-
-impl Cli {
-    /// Parse std::env::args and return the Cli struct.
-    pub fn parse() -> Self {
-        <Self as Parser>::parse()
-    }
-}

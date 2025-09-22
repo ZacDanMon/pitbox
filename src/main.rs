@@ -5,6 +5,7 @@ mod models;
 mod output;
 
 use api::AppResult;
+use clap::Parser;
 use cli::{Cli, Command};
 
 fn main() -> AppResult<()> {

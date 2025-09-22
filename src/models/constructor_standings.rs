@@ -1,3 +1,5 @@
+use crate::models::common::Constructor;
+
 use serde::Deserialize;
 
 // TODO: Get gaps flag working.
@@ -14,10 +16,4 @@ pub struct ConstructorEntry {
     pub points: String,
     #[serde(rename = "Constructor")]
     pub constructor: Constructor,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Constructor {
-    pub name: String,
 }
