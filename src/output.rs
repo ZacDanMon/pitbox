@@ -1,5 +1,6 @@
 use crate::models::{
     constructor_standings::ConstructorStandings, driver_standings::DriverStandings,
+    race_results::RaceTable,
 };
 use comfy_table::{
     ContentArrangement, Table, TableComponent,
@@ -32,19 +33,18 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
         .set_header(vec!["Pos", "Driver", "Team", "Points"]);
 
     for e in standings.entries {
-        let flag = FLAGS
-            .get(&e.driver.nationality)
-            .map(String::as_str)
-            .unwrap_or("");
-        let name = format!("{} {} {flag}", e.driver.given_name, e.driver.family_name);
+        let name = name_with_country_flag(
+            &e.driver.given_name,
+            &e.driver.family_name,
+            &e.driver.nationality,
+        );
 
         let constructor_name: &str = match e.constructors.as_slice() {
             [] => "Unknown",
             [only] => &only.name,
             [.., last] => &last.name,
         };
-
-        let constructor_name = constructor_name.replace(REMOVE_STR, "");
+        let constructor_name = clean_constructor_name(&constructor_name);
 
         table.add_row(vec![
             &e.position,
@@ -54,7 +54,7 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
         ]);
     }
 
-    println!("🏁 F1 Drivers Standings");
+    println!("F1 Drivers Standings 🏁");
     println!("{table}\n");
 }
 
@@ -75,10 +75,62 @@ pub fn print_constructor_standings_table(standings: ConstructorStandings) {
         .set_header(vec!["Pos", "Constructor", "Points"]);
 
     for e in standings.entries {
-        let constructor_name = e.constructor.name.replace(REMOVE_STR, "");
+        let constructor_name = clean_constructor_name(&e.constructor.name);
         table.add_row(vec![&e.position, &constructor_name, &e.points]);
     }
 
-    println!("🏆 F1 Constructors Standings");
+    println!("F1 Constructors Standings 🏆");
     println!("{table}\n");
+}
+
+pub fn print_race_results_table(race_table: RaceTable) {
+    let mut table = Table::new();
+
+    table
+        .load_preset(comfy_table::presets::UTF8_FULL_CONDENSED)
+        .apply_modifier(UTF8_ROUND_CORNERS)
+        .apply_modifier(UTF8_SOLID_INNER_BORDERS)
+        .remove_style(TableComponent::HorizontalLines)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec!["Pos", "Driver", "Constructor", "Time", "Points"]);
+
+    for r in &race_table.races[0].results {
+        let name = name_with_country_flag(
+            &r.driver.given_name,
+            &r.driver.family_name,
+            &r.driver.nationality,
+        );
+        let position = match r.position.as_str() {
+            "R" => "RET",
+            _ => &r.position,
+        };
+
+        table.add_row(vec![
+            position,
+            &name,
+            &clean_constructor_name(&r.constructor.name),
+            "",
+            &r.points.to_string(),
+        ]);
+    }
+
+    println!(
+        "{} {} Results 🏁",
+        race_table.races[0].season, race_table.races[0].race_name
+    );
+    println!("{table}\n");
+}
+
+/// Removes substring "F1" from a constructor name.
+fn clean_constructor_name(name: &str) -> String {
+    let clean_name = name.replace(REMOVE_STR, "");
+    clean_name
+}
+
+/// Builds a formatted string with Driver first name, last name, and country flag.
+fn name_with_country_flag(first_name: &str, last_name: &str, nationality: &str) -> String {
+    format!(
+        "{first_name} {last_name} {}",
+        FLAGS.get(nationality).map(String::as_str).unwrap_or("")
+    )
 }

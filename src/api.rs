@@ -1,6 +1,7 @@
 use crate::models::{
     constructor_standings::{ConstructorEntry, ConstructorStandings},
     driver_standings::{DriverEntry, DriverStandings},
+    race_results::ApiResponse,
 };
 
 use reqwest::{IntoUrl, blocking::Client};
@@ -92,4 +93,11 @@ pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandin
         entries,
     };
     Ok(standings)
+}
+
+pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse> {
+    let url = format!("{}/{}/{}/results/", BASE_URL, season, round);
+    let response = CLIENT.get(&url).send()?;
+    let json_response: ApiResponse = response.json()?;
+    Ok(json_response)
 }

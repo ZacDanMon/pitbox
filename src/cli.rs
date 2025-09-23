@@ -18,6 +18,9 @@ pub struct Cli {
 pub enum Command {
     #[command(alias = "s")]
     Standings(StandingsArgs),
+
+    #[command(alias = "r")]
+    Results(ResultsArgs),
 }
 
 #[derive(Debug, Args)]
@@ -38,4 +41,13 @@ pub struct StandingsArgs {
 
     #[arg(short = 'g', long = "gap")]
     pub gap: bool,
+}
+
+#[derive(Debug, Args)]
+pub struct ResultsArgs {
+    #[arg(short = 's', long = "season", default_value = "current")]
+    pub season: String,
+
+    #[arg(short = 'r', long = "round", default_value = "last")]
+    pub round: String,
 }

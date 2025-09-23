@@ -1,4 +1,4 @@
-use crate::models::common::Constructor;
+use crate::models::common::{Constructor, Driver};
 
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
@@ -22,15 +22,4 @@ pub struct DriverEntry {
     pub driver: Driver,
     #[serde(rename = "Constructors")]
     pub constructors: Vec<Constructor>,
-}
-
-// TODO: Get gaps flag working.
-#[allow(dead_code)]
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Driver {
-    pub code: Option<String>,
-    pub given_name: String,
-    pub family_name: String,
-    pub nationality: String,
 }
