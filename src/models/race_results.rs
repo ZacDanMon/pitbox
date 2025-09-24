@@ -3,14 +3,14 @@ use crate::models::common::{Constructor, Driver};
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
 
-// The true top-level struct that matches the entire JSON response.
+// Top level struct that matches the entire JSON response.
 #[derive(Deserialize)]
 pub struct ApiResponse {
     #[serde(rename = "MRData")]
     pub mr_data: RaceResultsData,
 }
 
-// The top-level struct that matches the overall JSON response.
+// Corresponds to MRData, the entire JSON response.
 #[derive(Deserialize)]
 pub struct RaceResultsData {
     #[serde(rename = "RaceTable")]
@@ -67,8 +67,10 @@ pub struct Location {
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct RaceResult {
+    #[serde_as(as = "DisplayFromStr")]
+    pub position: u32,
     #[serde(rename = "positionText")]
-    pub position: String,
+    pub position_text: String,
     #[serde_as(as = "DisplayFromStr")]
     pub points: f64,
     #[serde(rename = "Driver")]
@@ -76,7 +78,8 @@ pub struct RaceResult {
     #[serde(rename = "Constructor")]
     pub constructor: Constructor,
     pub grid: Option<String>,
-    pub laps: Option<String>,
+    #[serde_as(as = "Option<DisplayFromStr>")]
+    pub laps: Option<u32>,
     pub status: Option<String>,
     #[serde(rename = "Time")]
     pub time: Option<RaceResultTime>,
@@ -84,7 +87,16 @@ pub struct RaceResult {
     pub fastest_lap: Option<FastestLap>,
 }
 
-// Corresponds to the `Time` object.
+impl RaceResult {
+    pub fn get_time(&self) -> &str {
+        match &self.time {
+            Some(race_result_time) => &race_result_time.time,
+            None => "",
+        }
+    }
+}
+
+// Corresponds to the `Time` object under RaceResult.
 #[serde_as]
 #[derive(Deserialize)]
 #[allow(dead_code)]
@@ -94,17 +106,19 @@ pub struct RaceResultTime {
     pub time: String,
 }
 
-// Corresponds to the `Time` object.
+// Corresponds to the `FastestLap` object.
 #[serde_as]
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct FastestLap {
     #[serde_as(as = "DisplayFromStr")]
-    pub rank: u8,
+    pub rank: u32,
     pub lap: String,
     #[serde(rename = "Time")]
     pub time: FastestLapTime,
 }
+
+// Corresponds to the `Time` object under FastestLap.
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct FastestLapTime {

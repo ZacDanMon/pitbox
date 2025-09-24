@@ -92,7 +92,16 @@ pub fn print_race_results_table(race_table: RaceTable) {
         .apply_modifier(UTF8_SOLID_INNER_BORDERS)
         .remove_style(TableComponent::HorizontalLines)
         .set_content_arrangement(ContentArrangement::Dynamic)
-        .set_header(vec!["Pos", "Driver", "Constructor", "Time", "Points"]);
+        .set_header(vec![
+            "Pos",
+            "Driver",
+            "Constructor",
+            "Time",
+            "Grid",
+            "Points",
+        ]);
+
+    let leader_laps = race_table.races[0].results[0].laps.unwrap_or_default();
 
     for r in &race_table.races[0].results {
         let name = name_with_country_flag(
@@ -100,16 +109,26 @@ pub fn print_race_results_table(race_table: RaceTable) {
             &r.driver.family_name,
             &r.driver.nationality,
         );
-        let position = match r.position.as_str() {
+        let position = match r.position_text.as_str() {
             "R" => "RET",
-            _ => &r.position,
+            _ => r.position_text.as_str(),
+        };
+
+        let laps_down = leader_laps - r.laps.unwrap_or_default();
+
+        let time_behind = match (laps_down, position) {
+            (_, "RET") => "DNF".to_string(),
+            (0, _) => r.get_time().to_string(),
+            (1, _) => format!("+{laps_down} lap"),
+            (_, _) => format!("+{laps_down} laps"),
         };
 
         table.add_row(vec![
             position,
             &name,
             &clean_constructor_name(&r.constructor.name),
-            "",
+            &time_behind,
+            &r.grid.as_deref().unwrap_or_default(),
             &r.points.to_string(),
         ]);
     }
