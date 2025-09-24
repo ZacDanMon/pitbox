@@ -1,5 +1,5 @@
 use crate::models::{
-    constructor_standings::{ConstructorEntry, ConstructorStandings},
+    constructor_standings::ConstructorStandingsResponse,
     driver_standings::{DriverEntry, DriverStandings},
     race_results::ApiResponse,
 };
@@ -66,33 +66,11 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<DriverStandings> {
     Ok(standings)
 }
 
-/// Fetches constructor standings for a given season ("current" or "2024").
-pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandings> {
-    const LIST: &str = "/MRData/StandingsTable/StandingsLists/0";
-
+pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandingsResponse> {
     let url = format!("{}/{}/constructorstandings/", BASE_URL, season);
-    let val: Value = fetch_json(url)?;
-
-    let list = val
-        .pointer(LIST)
-        .ok_or_else(|| format!("No standings list for season {season}"))?;
-
-    let standings_data: StandingsData = serde_json::from_value(list.clone())
-        .map_err(|e| format!("Failed to decode standings data: {e}"))?;
-
-    let entries_node = list
-        .get("ConstructorStandings")
-        .ok_or_else(|| format!("Missing ConstructorStandings list for season {season}"))?;
-
-    let entries: Vec<ConstructorEntry> = serde_json::from_value(entries_node.clone())
-        .map_err(|e| format!("Failed to decode constructor standings: {e}"))?;
-
-    let standings = ConstructorStandings {
-        season: standings_data.season,
-        round: standings_data.round,
-        entries,
-    };
-    Ok(standings)
+    let response = CLIENT.get(&url).send()?;
+    let json_response: ConstructorStandingsResponse = response.json()?;
+    Ok(json_response)
 }
 
 pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse> {

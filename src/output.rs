@@ -1,5 +1,5 @@
 use crate::models::{
-    constructor_standings::ConstructorStandings, driver_standings::DriverStandings,
+    constructor_standings::ConstructorStandingsTable, driver_standings::DriverStandings,
     race_results::RaceTable,
 };
 use comfy_table::{
@@ -48,12 +48,12 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
 }
 
 /// Print a pretty formatted table of F1 constructor standings to stdout.
-pub fn print_constructor_standings_table(standings: ConstructorStandings) {
+pub fn print_constructor_standings_table(standings_table: ConstructorStandingsTable) {
     let mut table = build_table(vec!["Pos", "Constructor", "Points"]);
 
-    for e in standings.entries {
-        let constructor_name = clean_constructor_name(&e.constructor.name);
-        table.add_row(vec![&e.position, &constructor_name, &e.points]);
+    for s in &standings_table.standings[0].constructor_standings {
+        let constructor_name = clean_constructor_name(&s.constructor.name);
+        table.add_row(vec![&s.position, &constructor_name, &s.points.to_string()]);
     }
 
     println!("F1 Constructors Standings 🏆");
