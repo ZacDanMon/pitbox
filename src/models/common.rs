@@ -1,5 +1,12 @@
 use serde::Deserialize;
 
+// Top level struct that matches the entire JSON response.
+#[derive(Deserialize)]
+pub struct ApiResponse<T> {
+    #[serde(rename = "MRData")]
+    pub mr_data: T,
+}
+
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct Constructor {

@@ -3,13 +3,6 @@ use crate::models::common::{Constructor, Driver};
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
 
-// Top level struct that matches the entire JSON response.
-#[derive(Deserialize)]
-pub struct ApiResponse {
-    #[serde(rename = "MRData")]
-    pub mr_data: RaceResultsData,
-}
-
 // Corresponds to MRData, the entire JSON response.
 #[derive(Deserialize)]
 pub struct RaceResultsData {

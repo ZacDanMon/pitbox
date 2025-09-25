@@ -1,7 +1,8 @@
 use crate::models::{
-    constructor_standings::ConstructorStandingsResponse,
+    common::ApiResponse,
+    constructor_standings::ConstructorStandingsData,
     driver_standings::{DriverEntry, DriverStandings},
-    race_results::ApiResponse,
+    race_results::RaceResultsData,
 };
 
 use reqwest::{IntoUrl, blocking::Client};
@@ -66,16 +67,18 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<DriverStandings> {
     Ok(standings)
 }
 
-pub fn fetch_constructor_standings(season: &str) -> AppResult<ConstructorStandingsResponse> {
+pub fn fetch_constructor_standings(
+    season: &str,
+) -> AppResult<ApiResponse<ConstructorStandingsData>> {
     let url = format!("{}/{}/constructorstandings/", BASE_URL, season);
     let response = CLIENT.get(&url).send()?;
-    let json_response: ConstructorStandingsResponse = response.json()?;
+    let json_response: ApiResponse<ConstructorStandingsData> = response.json()?;
     Ok(json_response)
 }
 
-pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse> {
+pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse<RaceResultsData>> {
     let url = format!("{}/{}/{}/results/", BASE_URL, season, round);
     let response = CLIENT.get(&url).send()?;
-    let json_response: ApiResponse = response.json()?;
+    let json_response: ApiResponse<RaceResultsData> = response.json()?;
     Ok(json_response)
 }
