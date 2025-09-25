@@ -31,7 +31,7 @@ pub struct Race {
     #[serde(rename = "Circuit")]
     pub circuit: Circuit,
     pub date: String,
-    pub time: String,
+    pub time: Option<String>,
     #[serde(rename = "Results")]
     pub results: Vec<RaceResult>,
 }

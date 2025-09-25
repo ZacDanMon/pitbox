@@ -89,6 +89,7 @@ pub fn print_race_results_table(race_table: RaceTable) {
         let position = match r.position_text.as_str() {
             "R" => "RET",
             "D" => "DSQ",
+            "W" => "DNS",
             _ => r.position_text.as_str(),
         };
 
@@ -97,6 +98,7 @@ pub fn print_race_results_table(race_table: RaceTable) {
         let time_behind = match (laps_down, position) {
             (_, "RET") => "DNF".to_string(),
             (_, "DSQ") => "DSQ".to_string(),
+            (_, "DNS") => "DNS".to_string(),
             (0, _) => r.get_time().to_string(),
             (1, _) => format!("+{laps_down} lap"),
             (_, _) => format!("+{laps_down} laps"),

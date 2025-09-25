@@ -21,7 +21,7 @@ pub struct Constructor {
 #[serde(rename_all = "camelCase")]
 pub struct Driver {
     pub driver_id: String,
-    pub permanent_number: String,
+    pub permanent_number: Option<String>,
     pub code: Option<String>,
     pub given_name: String,
     pub family_name: String,
