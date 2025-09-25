@@ -11,9 +11,14 @@ use std::{collections::HashMap, sync::LazyLock};
 // Remove this substring from constructor names.
 const REMOVE_STR: &str = "F1 Team";
 
+static NATIONALITIES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
+    let toml = include_str!("../assets/nationality.toml");
+    toml::from_str::<HashMap<String, String>>(toml).expect("Invalid nationality.toml.")
+});
+
 static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
-    let toml = include_str!("../assets/nationality_flags.toml");
-    toml::from_str::<HashMap<String, String>>(toml).expect("Invalid nationality_flag.toml.")
+    let toml = include_str!("../assets/flags.toml");
+    toml::from_str::<HashMap<String, String>>(toml).expect("Invalid flags.toml.")
 });
 
 /// Print a pretty formatted table of F1 driver standings to stdout.
@@ -21,10 +26,11 @@ pub fn print_driver_standings_table(standings: DriverStandings) {
     let mut table = build_table(vec!["Pos", "Driver", "Constructor", "Points"]);
 
     for e in standings.entries {
-        let name = name_with_country_flag(
+        let name = format!(
+            "{} {} {}",
             &e.driver.given_name,
             &e.driver.family_name,
-            &e.driver.nationality,
+            get_flag_emoji(&e.driver.nationality)
         );
 
         // For cases were a driver raced for multiple constructors in a season,
@@ -74,13 +80,15 @@ pub fn print_race_results_table(race_table: RaceTable) {
     let leader_laps = race_table.races[0].results[0].laps.unwrap_or_default();
 
     for r in &race_table.races[0].results {
-        let name = name_with_country_flag(
+        let name = format!(
+            "{} {} {}",
             &r.driver.given_name,
             &r.driver.family_name,
-            &r.driver.nationality,
+            get_flag_emoji(&r.driver.nationality)
         );
         let position = match r.position_text.as_str() {
             "R" => "RET",
+            "D" => "DSQ",
             _ => r.position_text.as_str(),
         };
 
@@ -88,6 +96,7 @@ pub fn print_race_results_table(race_table: RaceTable) {
 
         let time_behind = match (laps_down, position) {
             (_, "RET") => "DNF".to_string(),
+            (_, "DSQ") => "DSQ".to_string(),
             (0, _) => r.get_time().to_string(),
             (1, _) => format!("+{laps_down} lap"),
             (_, _) => format!("+{laps_down} laps"),
@@ -104,8 +113,10 @@ pub fn print_race_results_table(race_table: RaceTable) {
     }
 
     println!(
-        "{} {} Results 🏁",
-        race_table.races[0].season, race_table.races[0].race_name
+        "{} {} Results {}",
+        race_table.races[0].season,
+        race_table.races[0].race_name,
+        get_flag_emoji(&race_table.races[0].circuit.location.country),
     );
     println!("{table}\n");
 }
@@ -116,12 +127,17 @@ fn clean_constructor_name(name: &str) -> String {
     clean_name
 }
 
-/// Builds a formatted string with Driver first name, last name, and country flag.
-fn name_with_country_flag(first_name: &str, last_name: &str, nationality: &str) -> String {
-    format!(
-        "{first_name} {last_name} {}",
-        FLAGS.get(nationality).map(String::as_str).unwrap_or("")
-    )
+/// Lookup the country flag using a nation key.
+/// Key can be an adjective, i.e., German, or
+/// a noun, i.e., Germany.
+/// Returns a String containing the emoji flag.
+fn get_flag_emoji(key: &str) -> String {
+    let final_key = NATIONALITIES.get(key).map(String::as_str).unwrap_or(key);
+    FLAGS
+        .get(final_key)
+        .map(String::as_str)
+        .unwrap_or_default()
+        .to_string()
 }
 
 /// Build a comfy_table for output with the provided headers.
