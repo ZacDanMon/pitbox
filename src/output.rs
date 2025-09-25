@@ -1,5 +1,5 @@
 use crate::models::{
-    constructor_standings::ConstructorStandingsTable, driver_standings::DriverStandings,
+    constructor_standings::ConstructorStandingsTable, driver_standings::DriverStandingsTable,
     race_results::RaceTable,
 };
 use comfy_table::{
@@ -22,10 +22,10 @@ static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
 });
 
 /// Print a pretty formatted table of F1 driver standings to stdout.
-pub fn print_driver_standings_table(standings: DriverStandings) {
+pub fn print_driver_standings_table(standings: DriverStandingsTable) {
     let mut table = build_table(vec!["Pos", "Driver", "Constructor", "Points"]);
 
-    for e in standings.entries {
+    for e in &standings.standings[0].driver_standings {
         let name = format!(
             "{} {} {}",
             &e.driver.given_name,

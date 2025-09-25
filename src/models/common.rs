@@ -10,6 +10,8 @@ pub struct ApiResponse<T> {
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct Constructor {
+    #[serde(rename = "constructorId")]
+    pub constructor_id: String,
     pub name: String,
     pub nationality: String,
 }
@@ -18,6 +20,8 @@ pub struct Constructor {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Driver {
+    pub driver_id: String,
+    pub permanent_number: String,
     pub code: Option<String>,
     pub given_name: String,
     pub family_name: String,

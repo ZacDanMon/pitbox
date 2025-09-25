@@ -1,14 +1,9 @@
 use crate::models::{
-    common::ApiResponse,
-    constructor_standings::ConstructorStandingsData,
-    driver_standings::{DriverEntry, DriverStandings},
-    race_results::RaceResultsData,
+    common::ApiResponse, constructor_standings::ConstructorStandingsData,
+    driver_standings::DriverStandingsData, race_results::RaceResultsData,
 };
 
-use reqwest::{IntoUrl, blocking::Client};
-use serde::Deserialize;
-use serde_json::Value;
-use serde_with::{DisplayFromStr, serde_as};
+use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -25,46 +20,12 @@ static CLIENT: LazyLock<Client> = LazyLock::new(|| {
         .expect("failed to build reqwest client")
 });
 
-#[serde_as]
-#[derive(Deserialize)]
-struct StandingsData {
-    season: String,
-    #[serde_as(as = "DisplayFromStr")]
-    round: u32,
-}
-
-fn fetch_json(url: impl IntoUrl) -> AppResult<Value> {
-    Ok(CLIENT.get(url).send()?.json()?)
-}
-
 /// Fetches driver standings for a given season ("current" or "2024").
-pub fn fetch_driver_standings(season: &str) -> AppResult<DriverStandings> {
-    const LIST: &str = "/MRData/StandingsTable/StandingsLists/0";
-
+pub fn fetch_driver_standings(season: &str) -> AppResult<ApiResponse<DriverStandingsData>> {
     let url = format!("{}/{}/driverstandings/", BASE_URL, season);
-    let val: Value = fetch_json(url)?;
-
-    let list = val
-        .pointer(LIST)
-        .ok_or_else(|| format!("No standings list for season {season}"))?;
-
-    let standings_data: StandingsData = serde_json::from_value(list.clone())
-        .map_err(|e| format!("Failed to decode standings data: {e}"))?;
-
-    let entries_node = list
-        .get("DriverStandings")
-        .ok_or_else(|| format!("Missing DriverStandings list for season {season}"))?;
-
-    let entries: Vec<DriverEntry> = serde_json::from_value(entries_node.clone())
-        .map_err(|e| format!("Failed to decode driver standings: {e}"))?;
-
-    let standings = DriverStandings {
-        season: standings_data.season,
-        round: standings_data.round,
-        entries,
-    };
-
-    Ok(standings)
+    let response = CLIENT.get(&url).send()?;
+    let json_response: ApiResponse<DriverStandingsData> = response.json()?;
+    Ok(json_response)
 }
 
 pub fn fetch_constructor_standings(

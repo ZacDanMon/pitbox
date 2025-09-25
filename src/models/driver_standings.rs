@@ -3,21 +3,44 @@ use crate::models::common::{Constructor, Driver};
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
 
-// TODO: Get gaps flag working.
+// Corresponds to MRData, the entire JSON response.
+#[derive(Deserialize)]
+pub struct DriverStandingsData {
+    #[serde(rename = "StandingsTable")]
+    pub standings_table: DriverStandingsTable,
+}
+
+// Corresponds to the `StandingsTable` object in the JSON.
+#[derive(Deserialize)]
 #[allow(dead_code)]
-pub struct DriverStandings {
+pub struct DriverStandingsTable {
     pub season: String,
-    pub round: u32,
-    pub entries: Vec<DriverEntry>,
+    pub round: String,
+    #[serde(rename = "StandingsLists")]
+    pub standings: Vec<DriverStandingsList>,
+}
+
+#[derive(Deserialize)]
+#[serde_as]
+#[allow(dead_code)]
+pub struct DriverStandingsList {
+    pub season: String,
+    pub round: String,
+    #[serde(rename = "DriverStandings")]
+    pub driver_standings: Vec<DriverStandingsEntry>,
 }
 
 #[serde_as]
 #[derive(Deserialize)]
-pub struct DriverEntry {
-    #[serde(rename = "positionText")]
+#[allow(dead_code)]
+pub struct DriverStandingsEntry {
     pub position: String,
+    #[serde(rename = "positionText")]
+    pub position_text: String,
     #[serde_as(as = "DisplayFromStr")]
     pub points: f64,
+    #[serde_as(as = "DisplayFromStr")]
+    pub wins: u32,
     #[serde(rename = "Driver")]
     pub driver: Driver,
     #[serde(rename = "Constructors")]
