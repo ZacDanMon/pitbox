@@ -2,6 +2,7 @@ use crate::models::{
     constructor_standings::ConstructorStandingsTable, driver_standings::DriverStandingsTable,
     race_results::RaceTable,
 };
+use crate::stats::DriverStats;
 use comfy_table::{
     ContentArrangement, Table, TableComponent,
     modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS},
@@ -109,7 +110,7 @@ pub fn print_race_results_table(race_table: RaceTable) {
             &name,
             &clean_constructor_name(&r.constructor.name),
             &time_behind,
-            &r.grid.as_deref().unwrap_or_default(),
+            &r.grid.unwrap_or_default().to_string(),
             &r.points.to_string(),
         ]);
     }
@@ -120,6 +121,40 @@ pub fn print_race_results_table(race_table: RaceTable) {
         race_table.races[0].race_name,
         get_flag_emoji(&race_table.races[0].circuit.location.country),
     );
+    println!("{table}\n");
+}
+
+pub fn print_driver_results_table(race_table: Vec<RaceTable>) {
+    let mut table = build_table(vec![
+        "Driver",
+        "Races",
+        "Best Grid",
+        "Best Finish",
+        "Avg Grid",
+        "Avg Finish",
+        "Poles",
+        "Wins",
+        "RET",
+        "Points",
+    ]);
+
+    for t in &race_table {
+        let stats = DriverStats::from_race_table(t);
+
+        table.add_row(vec![
+            &stats.code,
+            &stats.total_races.to_string(),
+            &stats.best_grid.to_string(),
+            &stats.best_finish.to_string(),
+            &format!("{:.1}", stats.avg_grid),
+            &format!("{:.1}", stats.avg_finish),
+            &stats.poles.to_string(),
+            &stats.wins.to_string(),
+            &stats.ret.to_string(),
+            &stats.points.to_string(),
+        ]);
+    }
+    println!("Driver Results",);
     println!("{table}\n");
 }
 

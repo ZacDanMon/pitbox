@@ -3,6 +3,7 @@ mod cli;
 mod commands;
 mod models;
 mod output;
+mod stats;
 
 use api::AppResult;
 use clap::Parser;
@@ -14,5 +15,6 @@ fn main() -> AppResult<()> {
     match args.command {
         Command::Standings(a) => commands::run_standings(&a),
         Command::Results(a) => commands::run_race_results(&a),
+        Command::Driver(a) => commands::run_driver_results(&a),
     }
 }

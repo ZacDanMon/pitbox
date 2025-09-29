@@ -1,4 +1,10 @@
-use crate::{api, api::AppResult, cli::ResultsArgs, cli::StandingsArgs, output};
+use crate::{
+    api::{self, AppResult},
+    cli::{DriverArgs, ResultsArgs, StandingsArgs},
+    models::common::Driver,
+    models::race_results::RaceTable,
+    output,
+};
 
 pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
     if args.drivers {
@@ -24,4 +30,48 @@ pub fn run_race_results(args: &ResultsArgs) -> AppResult<()> {
             .race_table,
     );
     Ok(())
+}
+
+pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
+    let mut drivers = api::fetch_drivers(&args.season)?
+        .mr_data
+        .driver_table
+        .drivers;
+    let mut driver_ids: Vec<String> = Vec::new();
+
+    for n in &args.name {
+        match get_driver_id(&mut drivers, &n) {
+            Some(id) => driver_ids.push(id),
+            None => eprintln!("No driver found with name: {n}"),
+        }
+    }
+    let mut tables: Vec<RaceTable> = Vec::new();
+
+    for d in &driver_ids {
+        tables.push(
+            api::fetch_driver_results(&args.season, d)?
+                .mr_data
+                .race_table,
+        );
+    }
+    output::print_driver_results_table(tables);
+    Ok(())
+}
+
+fn get_driver_id(drivers: &Vec<Driver>, name: &str) -> Option<String> {
+    let search_name = name.to_lowercase();
+
+    drivers
+        .iter()
+        .find(|d| {
+            let code_match = d
+                .code
+                .as_deref()
+                .map(|code| code.eq_ignore_ascii_case(&search_name))
+                .unwrap_or(false);
+            let last_name_match = d.family_name.to_lowercase().starts_with(&search_name);
+
+            code_match || last_name_match
+        })
+        .map(|d| d.driver_id.to_string())
 }

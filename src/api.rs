@@ -1,3 +1,4 @@
+use crate::models::drivers::DriverData;
 use crate::models::{
     common::ApiResponse, constructor_standings::ConstructorStandingsData,
     driver_standings::DriverStandingsData, race_results::RaceResultsData,
@@ -41,5 +42,19 @@ pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse<Ra
     let url = format!("{}/{}/{}/results/", BASE_URL, season, round);
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<RaceResultsData> = response.json()?;
+    Ok(json_response)
+}
+
+pub fn fetch_driver_results(season: &str, driver: &str) -> AppResult<ApiResponse<RaceResultsData>> {
+    let url = format!("{}/{}/drivers/{}/results/", BASE_URL, season, driver);
+    let response = CLIENT.get(&url).send()?;
+    let json_response: ApiResponse<RaceResultsData> = response.json()?;
+    Ok(json_response)
+}
+
+pub fn fetch_drivers(season: &str) -> AppResult<ApiResponse<DriverData>> {
+    let url = format!("{}/{}/drivers/", BASE_URL, season);
+    let response = CLIENT.get(&url).send()?;
+    let json_response: ApiResponse<DriverData> = response.json()?;
     Ok(json_response)
 }

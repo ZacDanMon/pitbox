@@ -21,6 +21,9 @@ pub enum Command {
 
     #[command(alias = "r")]
     Results(ResultsArgs),
+
+    #[command(alias = "d")]
+    Driver(DriverArgs),
 }
 
 #[derive(Debug, Args)]
@@ -50,4 +53,13 @@ pub struct ResultsArgs {
 
     #[arg(short = 'r', long = "round", default_value = "last")]
     pub round: String,
+}
+
+#[derive(Debug, Args)]
+pub struct DriverArgs {
+    #[arg(short = 's', long = "season", default_value = "current")]
+    pub season: String,
+
+    #[arg(short = 'n', long = "name", value_delimiter = ',', num_args = 1..)]
+    pub name: Vec<String>,
 }

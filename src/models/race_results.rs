@@ -70,7 +70,8 @@ pub struct RaceResult {
     pub driver: Driver,
     #[serde(rename = "Constructor")]
     pub constructor: Constructor,
-    pub grid: Option<String>,
+    #[serde_as(as = "Option<DisplayFromStr>")]
+    pub grid: Option<u32>,
     #[serde_as(as = "Option<DisplayFromStr>")]
     pub laps: Option<u32>,
     pub status: Option<String>,
