@@ -1,12 +1,11 @@
 use std::{collections::HashMap, sync::LazyLock};
 
+use apex::models::constructor_standings::ConstructorStandingsTable;
+use apex::models::driver_standings::DriverStandingsTable;
+use apex::models::race_results::RaceTable;
+use apex::stats::DriverStats;
 use comfy_table::modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS};
 use comfy_table::{ContentArrangement, Table, TableComponent};
-
-use crate::models::constructor_standings::ConstructorStandingsTable;
-use crate::models::driver_standings::DriverStandingsTable;
-use crate::models::race_results::RaceTable;
-use crate::stats::DriverStats;
 
 /// Remove this redundant substring from constructor names.
 const REMOVE_STR: &str = "F1 Team";

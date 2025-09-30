@@ -1,7 +1,8 @@
-use crate::api::{self, AppResult};
+use apex::api::{self, AppResult};
+use apex::models::common::Driver;
+use apex::models::race_results::RaceTable;
+
 use crate::cli::{DriverArgs, ResultsArgs, StandingsArgs};
-use crate::models::common::Driver;
-use crate::models::race_results::RaceTable;
 use crate::output;
 
 /// Process the standings subcommand.
