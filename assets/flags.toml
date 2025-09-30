@@ -1,6 +1,6 @@
 # Map of countries -> emoji flags
 # This covers all of the countries that have hosted an F1 race,
-# and every F1 driver nationality.
+# as well as all F1 driver and constructor nationalities.
 Argentina                = "🇦🇷"
 Australia                = "🇦🇺"
 Austria                  = "🇦🇹"
@@ -14,10 +14,10 @@ China                    = "🇨🇳"
 Colombia                 = "🇨🇴"
 "Czech Republic"         = "🇨🇿"
 Denmark                  = "🇩🇰"
-Netherlands              = "🇳🇱"
 Finland                  = "🇫🇮"
 France                   = "🇫🇷"
 Germany                  = "🇩🇪"
+"Hong Kong"              = "🇭🇰"
 Hungary                  = "🇭🇺"
 India                    = "🇮🇳"
 Indonesia                = "🇮🇩"
@@ -29,6 +29,7 @@ Malaysia                 = "🇲🇾"
 Mexico                   = "🇲🇽"
 Monaco                   = "🇲🇨"
 Morocco                  = "🇲🇦"
+Netherlands              = "🇳🇱"
 "New Zealand"            = "🇳🇿"
 Poland                   = "🇵🇱"
 Portugal                 = "🇵🇹"

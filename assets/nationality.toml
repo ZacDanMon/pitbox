@@ -1,5 +1,6 @@
 # Map of nationalities -> countries
-# This holds nationalities for every driver in F1 history.
+# This holds nationalities for every driver 
+# and constructor in F1 history.
 American        = "USA"
 Argentine       = "Argentina"
 Australian      = "Australia"
@@ -14,6 +15,7 @@ Colombian       = "Colombia"
 Czech           = "Czech Republic"
 Danish          = "Denmark"
 Dutch           = "Netherlands"
+"East German"   = "Germany"
 Finnish         = "Finland"
 French          = "France"
 German          = "Germany"
