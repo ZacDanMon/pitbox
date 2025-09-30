@@ -1,6 +1,6 @@
 use clap::{ArgGroup, Args, Parser, Subcommand};
 
-/// Apex F1 CLI
+/// Pitbox F1 CLI
 #[derive(Parser, Debug)]
 #[command(
     author,

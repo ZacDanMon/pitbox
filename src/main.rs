@@ -1,5 +1,5 @@
-use apex::api::AppResult;
 use clap::Parser;
+use pitbox::api::AppResult;
 
 use cli::{Cli, Command};
 
