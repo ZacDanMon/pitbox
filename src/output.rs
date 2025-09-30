@@ -12,12 +12,12 @@ use crate::stats::DriverStats;
 const REMOVE_STR: &str = "F1 Team";
 
 static NATIONALITIES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
-    let toml = include_str!("../assets/nationality.toml");
+    let toml = include_str!("../resources/nationality.toml");
     toml::from_str::<HashMap<String, String>>(toml).expect("Invalid nationality.toml.")
 });
 
 static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
-    let toml = include_str!("../assets/flags.toml");
+    let toml = include_str!("../resources/flags.toml");
     toml::from_str::<HashMap<String, String>>(toml).expect("Invalid flags.toml.")
 });
 
