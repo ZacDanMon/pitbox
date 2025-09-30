@@ -30,6 +30,7 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<ApiResponse<DriverStand
     Ok(json_response)
 }
 
+/// Fetches constructor standings for a given season ("current" or "2024").
 pub fn fetch_constructor_standings(
     season: &str,
 ) -> AppResult<ApiResponse<ConstructorStandingsData>> {
@@ -39,6 +40,7 @@ pub fn fetch_constructor_standings(
     Ok(json_response)
 }
 
+/// Fetches race results for a given round ("last" or "13") in a season ("current" or "2024").
 pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse<RaceResultsData>> {
     let url = format!("{BASE_URL}/{season}/{round}/results/");
     let response = CLIENT.get(&url).send()?;
@@ -46,6 +48,7 @@ pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse<Ra
     Ok(json_response)
 }
 
+/// Fetches driver results for a given season ("current" or "2024") using a driver id.
 pub fn fetch_driver_results(season: &str, driver: &str) -> AppResult<ApiResponse<RaceResultsData>> {
     let url = format!("{BASE_URL}/{season}/drivers/{driver}/results/");
     let response = CLIENT.get(&url).send()?;
@@ -53,6 +56,7 @@ pub fn fetch_driver_results(season: &str, driver: &str) -> AppResult<ApiResponse
     Ok(json_response)
 }
 
+/// Fetches all drivers that raced in a given season.
 pub fn fetch_drivers(season: &str) -> AppResult<ApiResponse<DriverData>> {
     let url = format!("{BASE_URL}/{season}/drivers/");
     let response = CLIENT.get(&url).send()?;

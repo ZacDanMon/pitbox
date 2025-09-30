@@ -4,6 +4,7 @@ use crate::models::common::Driver;
 use crate::models::race_results::RaceTable;
 use crate::output;
 
+/// Process the standings subcommand.
 pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
     if args.drivers {
         output::print_driver_standings_table(
@@ -21,6 +22,7 @@ pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
     Ok(())
 }
 
+/// Process the results subcommand.
 pub fn run_race_results(args: &ResultsArgs) -> AppResult<()> {
     output::print_race_results_table(
         &api::fetch_race_results(&args.season, &args.round)?
@@ -30,13 +32,16 @@ pub fn run_race_results(args: &ResultsArgs) -> AppResult<()> {
     Ok(())
 }
 
+/// Process the driver subcommand.
 pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
+    // First need to get the list of drivers from this season.
     let drivers = api::fetch_drivers(&args.season)?
         .mr_data
         .driver_table
         .drivers;
     let mut driver_ids: Vec<String> = Vec::new();
 
+    // Check if each driver passed as an arg matches to a driver.
     for n in &args.name {
         match get_driver_id(&drivers, n) {
             Some(id) => driver_ids.push(id),
@@ -56,6 +61,10 @@ pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
     Ok(())
 }
 
+/// Lookup a driver id.
+///
+/// Searches for a match using either the start of a last name,
+/// or the 3 character driver identifier code.
 fn get_driver_id(drivers: &[Driver], name: &str) -> Option<String> {
     let search_name = name.to_lowercase();
 

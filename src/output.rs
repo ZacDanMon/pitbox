@@ -8,14 +8,16 @@ use crate::models::driver_standings::DriverStandingsTable;
 use crate::models::race_results::RaceTable;
 use crate::stats::DriverStats;
 
-// Remove this substring from constructor names.
+/// Remove this redundant substring from constructor names.
 const REMOVE_STR: &str = "F1 Team";
 
+/// Mapping of nationalities to country names read from `nationality.toml`.
 static NATIONALITIES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     let toml = include_str!("../resources/nationality.toml");
     toml::from_str::<HashMap<String, String>>(toml).expect("Invalid nationality.toml.")
 });
 
+/// Mapping of country names to emoji flags read from `flags.toml`.
 static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     let toml = include_str!("../resources/flags.toml");
     toml::from_str::<HashMap<String, String>>(toml).expect("Invalid flags.toml.")
@@ -33,7 +35,7 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable) {
             get_flag_emoji(&e.driver.nationality)
         );
 
-        // For cases were a driver raced for multiple constructors in a season,
+        // For cases where a driver raced for multiple constructors in a season,
         // only display the last one.
         let constructor_name = match e.constructors.as_slice() {
             [] => "Unknown".to_string(),
@@ -131,6 +133,7 @@ pub fn print_race_results_table(race_table: &RaceTable) {
     println!("{table}\n");
 }
 
+/// Print a pretty formatted table of driver results to stdout.
 pub fn print_driver_results_table(race_table: &[RaceTable]) {
     let mut table = build_table(vec![
         "Driver",
@@ -165,15 +168,19 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
     println!("{table}\n");
 }
 
-/// Removes substring "F1" from a constructor name.
+/// Removes substring "F1 Team" from a constructor name.
+///
+/// # Returns a new string with "F1 Team" removed from the name.
 fn clean_constructor_name(name: &str) -> String {
     name.replace(REMOVE_STR, "")
 }
 
 /// Lookup the country flag using a nation key.
-/// Key can be an adjective, i.e., German, or
-/// a noun, i.e., Germany.
-/// Returns a String containing the emoji flag.
+///
+/// Key can be an adjective, e.g., German, or
+/// a noun, e.g., Germany.
+///
+/// # Returns a String containing the emoji flag.
 fn get_flag_emoji(key: &str) -> String {
     let final_key = NATIONALITIES.get(key).map_or(key, String::as_str);
     FLAGS

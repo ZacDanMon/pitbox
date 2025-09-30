@@ -2,6 +2,7 @@ use std::cmp;
 
 use crate::models::race_results::RaceTable;
 
+/// Internal struct used to fold accumulated values.
 struct DriverAccumulator {
     races_finished: u32,
     best_grid: u32,
@@ -106,6 +107,7 @@ impl DriverStats {
     }
 }
 
+/// Safely calculate the average from a sum.
 fn avg(sum: f64, count: f64) -> f64 {
     // It should never happen, but to be safe, protect against division by zero.
     if count == 0.0 { 0.0 } else { sum / count }
