@@ -58,8 +58,16 @@ pub fn print_constructor_standings_table(standings_table: &ConstructorStandingsT
     let mut table = build_table(vec!["Pos", "Constructor", "Points"]);
 
     for s in &standings_table.standings[0].constructor_standings {
-        let constructor_name = clean_constructor_name(&s.constructor.name);
-        table.add_row(vec![&s.position, &constructor_name, &s.points.to_string()]);
+        let constructor_name = format!(
+            "{} {}",
+            &s.constructor.name,
+            get_flag_emoji(&s.constructor.nationality)
+        );
+        table.add_row(vec![
+            &s.position_text,
+            &constructor_name,
+            &s.points.to_string(),
+        ]);
     }
 
     println!("F1 Constructors Standings 🏆");

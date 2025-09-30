@@ -34,7 +34,7 @@ pub struct ConstructorStandingsList {
 #[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct ConstructorStandingsEntry {
-    pub position: String,
+    pub position: Option<String>,
     #[serde(rename = "positionText")]
     pub position_text: String,
     #[serde_as(as = "DisplayFromStr")]
