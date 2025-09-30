@@ -1,13 +1,14 @@
+use clap::Parser;
+
+use api::AppResult;
+use cli::{Cli, Command};
+
 mod api;
 mod cli;
 mod commands;
 mod models;
 mod output;
 mod stats;
-
-use api::AppResult;
-use clap::Parser;
-use cli::{Cli, Command};
 
 fn main() -> AppResult<()> {
     let args = Cli::parse();

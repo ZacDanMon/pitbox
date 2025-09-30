@@ -29,7 +29,7 @@ pub struct DriverStats {
 }
 
 impl DriverStats {
-    /// Creates a DriverStats struct based on data from the given RaceTable.
+    /// Creates a `DriverStats` struct based on data from the given `RaceTable`.
     pub fn from_race_table(race_table: &RaceTable) -> Self {
         let initial_counts = DriverAccumulator {
             races_finished: 0,
@@ -87,8 +87,8 @@ impl DriverStats {
         // Now that we have the counts, we can compute the averages.
         let total_races = counts.races_finished + counts.ret;
 
-        let avg_grid = avg(counts.sum_of_grids as f64, total_races as f64);
-        let avg_finish = avg(counts.sum_of_finishes as f64, total_races as f64);
+        let avg_grid = avg(f64::from(counts.sum_of_grids), f64::from(total_races));
+        let avg_finish = avg(f64::from(counts.sum_of_finishes), f64::from(total_races));
 
         // Everything is moved to a single public struct for simple use by the caller.
         Self {

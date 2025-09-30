@@ -1,7 +1,7 @@
-use crate::models::common::Constructor;
-
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
+
+use crate::models::common::Constructor;
 
 // Corresponds to MRData, the entire JSON response.
 #[derive(Deserialize)]

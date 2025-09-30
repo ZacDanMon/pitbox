@@ -11,7 +11,7 @@ pub struct ApiResponse<T> {
 #[allow(dead_code)]
 pub struct Constructor {
     #[serde(rename = "constructorId")]
-    pub constructor_id: String,
+    pub id: String,
     pub name: String,
     pub nationality: String,
 }
@@ -20,7 +20,8 @@ pub struct Constructor {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Driver {
-    pub driver_id: String,
+    #[serde(rename = "driverId")]
+    pub id: String,
     pub permanent_number: Option<String>,
     pub code: Option<String>,
     pub given_name: String,

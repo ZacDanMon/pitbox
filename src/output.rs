@@ -1,13 +1,12 @@
-use crate::models::{
-    constructor_standings::ConstructorStandingsTable, driver_standings::DriverStandingsTable,
-    race_results::RaceTable,
-};
-use crate::stats::DriverStats;
-use comfy_table::{
-    ContentArrangement, Table, TableComponent,
-    modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS},
-};
 use std::{collections::HashMap, sync::LazyLock};
+
+use comfy_table::modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS};
+use comfy_table::{ContentArrangement, Table, TableComponent};
+
+use crate::models::constructor_standings::ConstructorStandingsTable;
+use crate::models::driver_standings::DriverStandingsTable;
+use crate::models::race_results::RaceTable;
+use crate::stats::DriverStats;
 
 // Remove this substring from constructor names.
 const REMOVE_STR: &str = "F1 Team";
@@ -23,7 +22,7 @@ static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
 });
 
 /// Print a pretty formatted table of F1 driver standings to stdout.
-pub fn print_driver_standings_table(standings: DriverStandingsTable) {
+pub fn print_driver_standings_table(standings: &DriverStandingsTable) {
     let mut table = build_table(vec!["Pos", "Driver", "Constructor", "Points"]);
 
     for e in &standings.standings[0].driver_standings {
@@ -55,7 +54,7 @@ pub fn print_driver_standings_table(standings: DriverStandingsTable) {
 }
 
 /// Print a pretty formatted table of F1 constructor standings to stdout.
-pub fn print_constructor_standings_table(standings_table: ConstructorStandingsTable) {
+pub fn print_constructor_standings_table(standings_table: &ConstructorStandingsTable) {
     let mut table = build_table(vec!["Pos", "Constructor", "Points"]);
 
     for s in &standings_table.standings[0].constructor_standings {
@@ -68,7 +67,7 @@ pub fn print_constructor_standings_table(standings_table: ConstructorStandingsTa
 }
 
 /// Print a pretty formatted table of F1 race results to stdout.
-pub fn print_race_results_table(race_table: RaceTable) {
+pub fn print_race_results_table(race_table: &RaceTable) {
     let mut table = build_table(vec![
         "Pos",
         "Driver",
@@ -118,13 +117,13 @@ pub fn print_race_results_table(race_table: RaceTable) {
     println!(
         "{} {} Results {}",
         race_table.races[0].season,
-        race_table.races[0].race_name,
+        race_table.races[0].name,
         get_flag_emoji(&race_table.races[0].circuit.location.country),
     );
     println!("{table}\n");
 }
 
-pub fn print_driver_results_table(race_table: Vec<RaceTable>) {
+pub fn print_driver_results_table(race_table: &[RaceTable]) {
     let mut table = build_table(vec![
         "Driver",
         "Races",
@@ -138,7 +137,7 @@ pub fn print_driver_results_table(race_table: Vec<RaceTable>) {
         "Points",
     ]);
 
-    for t in &race_table {
+    for t in race_table {
         let stats = DriverStats::from_race_table(t);
 
         table.add_row(vec![
@@ -160,8 +159,7 @@ pub fn print_driver_results_table(race_table: Vec<RaceTable>) {
 
 /// Removes substring "F1" from a constructor name.
 fn clean_constructor_name(name: &str) -> String {
-    let clean_name = name.replace(REMOVE_STR, "");
-    clean_name
+    name.replace(REMOVE_STR, "")
 }
 
 /// Lookup the country flag using a nation key.
@@ -169,7 +167,7 @@ fn clean_constructor_name(name: &str) -> String {
 /// a noun, i.e., Germany.
 /// Returns a String containing the emoji flag.
 fn get_flag_emoji(key: &str) -> String {
-    let final_key = NATIONALITIES.get(key).map(String::as_str).unwrap_or(key);
+    let final_key = NATIONALITIES.get(key).map_or(key, String::as_str);
     FLAGS
         .get(final_key)
         .map(String::as_str)
@@ -177,7 +175,7 @@ fn get_flag_emoji(key: &str) -> String {
         .to_string()
 }
 
-/// Build a comfy_table for output with the provided headers.
+/// Build a `comfy_table` for output with the provided headers.
 fn build_table(headers: Vec<&str>) -> Table {
     let mut table = Table::new();
 

@@ -1,12 +1,13 @@
-use crate::models::drivers::DriverData;
-use crate::models::{
-    common::ApiResponse, constructor_standings::ConstructorStandingsData,
-    driver_standings::DriverStandingsData, race_results::RaceResultsData,
-};
-
-use reqwest::blocking::Client;
 use std::sync::LazyLock;
 use std::time::Duration;
+
+use reqwest::blocking::Client;
+
+use crate::models::common::ApiResponse;
+use crate::models::constructor_standings::ConstructorStandingsData;
+use crate::models::driver_standings::DriverStandingsData;
+use crate::models::drivers::DriverData;
+use crate::models::race_results::RaceResultsData;
 
 const BASE_URL: &str = "https://api.jolpi.ca/ergast/f1";
 
@@ -23,7 +24,7 @@ static CLIENT: LazyLock<Client> = LazyLock::new(|| {
 
 /// Fetches driver standings for a given season ("current" or "2024").
 pub fn fetch_driver_standings(season: &str) -> AppResult<ApiResponse<DriverStandingsData>> {
-    let url = format!("{}/{}/driverstandings/", BASE_URL, season);
+    let url = format!("{BASE_URL}/{season}/driverstandings/");
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<DriverStandingsData> = response.json()?;
     Ok(json_response)
@@ -32,28 +33,28 @@ pub fn fetch_driver_standings(season: &str) -> AppResult<ApiResponse<DriverStand
 pub fn fetch_constructor_standings(
     season: &str,
 ) -> AppResult<ApiResponse<ConstructorStandingsData>> {
-    let url = format!("{}/{}/constructorstandings/", BASE_URL, season);
+    let url = format!("{BASE_URL}/{season}/constructorstandings/");
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<ConstructorStandingsData> = response.json()?;
     Ok(json_response)
 }
 
 pub fn fetch_race_results(season: &str, round: &str) -> AppResult<ApiResponse<RaceResultsData>> {
-    let url = format!("{}/{}/{}/results/", BASE_URL, season, round);
+    let url = format!("{BASE_URL}/{season}/{round}/results/");
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<RaceResultsData> = response.json()?;
     Ok(json_response)
 }
 
 pub fn fetch_driver_results(season: &str, driver: &str) -> AppResult<ApiResponse<RaceResultsData>> {
-    let url = format!("{}/{}/drivers/{}/results/", BASE_URL, season, driver);
+    let url = format!("{BASE_URL}/{season}/drivers/{driver}/results/");
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<RaceResultsData> = response.json()?;
     Ok(json_response)
 }
 
 pub fn fetch_drivers(season: &str) -> AppResult<ApiResponse<DriverData>> {
-    let url = format!("{}/{}/drivers/", BASE_URL, season);
+    let url = format!("{BASE_URL}/{season}/drivers/");
     let response = CLIENT.get(&url).send()?;
     let json_response: ApiResponse<DriverData> = response.json()?;
     Ok(json_response)

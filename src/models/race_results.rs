@@ -1,7 +1,7 @@
-use crate::models::common::{Constructor, Driver};
-
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
+
+use crate::models::common::{Constructor, Driver};
 
 // Corresponds to MRData, the entire JSON response.
 #[derive(Deserialize)]
@@ -27,7 +27,8 @@ pub struct RaceTable {
 pub struct Race {
     pub season: String,
     pub round: String,
-    pub race_name: String,
+    #[serde(rename = "raceName")]
+    pub name: String,
     #[serde(rename = "Circuit")]
     pub circuit: Circuit,
     pub date: String,
@@ -38,11 +39,12 @@ pub struct Race {
 
 // Corresponds to the `Circuit` object.
 #[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
 #[allow(dead_code)]
 pub struct Circuit {
-    pub circuit_id: String,
-    pub circuit_name: String,
+    #[serde(rename = "circuitId")]
+    pub id: String,
+    #[serde(rename = "circuitName")]
+    pub name: String,
     #[serde(rename = "Location")]
     pub location: Location,
 }

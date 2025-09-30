@@ -1,7 +1,7 @@
-use crate::models::common::Driver;
-
 use serde::Deserialize;
 use serde_with::{DisplayFromStr, serde_as};
+
+use crate::models::common::Driver;
 
 // Corresponds to MRData, the entire JSON response.
 #[serde_as]
