@@ -149,7 +149,7 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
 
     let mut stats: Vec<DriverStats> = race_table
         .iter()
-        .map(|t| DriverStats::from_race_table(t))
+        .map(DriverStats::from_race_table)
         .collect();
     stats.sort_by(|x, y| y.points.total_cmp(&x.points));
 
