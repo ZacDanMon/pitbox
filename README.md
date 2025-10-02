@@ -18,23 +18,27 @@ The different output types are separated into different subcommands to the main 
 `pitbox <command> [options]`
 #### Standings
 `pitbox standings <-c|-d> [options]`
-You can specify constructor standings with `-c`, or driver standings with `-d`. Output will default to the latest standings of the current F1 season. However that behavior can be overridden using the season flag `-s` and/or the round flag `-r` to specify a round to display the standings relative to, e.g., if you wanted to show the driver standings for 2016 at round 13 you would use `pitbox standings -d -s 2016 -r 13`.
+You can specify constructor standings with `-c`, or driver standings with `-d`. Output will default to the latest standings of the current F1 season. However that behavior can be overridden using the season flag `-s` and/or the round flag `-r` to specify a round to display the standings relative to, e.g., if you wanted to show the driver standings for 2016 at round 13 you would use:
+```bash
+pitbox standings -d -s 2016 -r 13
+```
 #### Race Results
 `pitbox results [options]`
 This command will display the race results of one race. No other part of the weekend is included in this output, only the race. The default race if no options are provided is the most recent race of the current season. This can be overridden by the season flag `-s` and/or the round flag `-r` to show the results from a particular season and a particular race.
 #### Driver Results
 `pitbox driver -n <names> [options]`
-This command will display stats over a season for one or multiple drivers. Given you a way to compare driver performance. Currently these are the stats that are displayed for each driver:
-- Total races
-    - This includes classified finishes and retirements but does not include "Did Not Start" or "Disqualified" classifications.
-- Best grid position
-- Best finishing position
+This command will display stats over a season for one or multiple drivers, giving you a way to compare driver performance. When multiple drivers are requested, they're displayed in descending order by total points. Currently these are the stats that are displayed for each driver:
 - Average grid position
 - Average finishing position
+- Best grid position
+- Best finishing position
+- Total races
+    - This includes classified finishes and retirements but does not include "Did Not Start" or "Disqualified" classifications.
+- Total number of retirements
 - Total number of poles
 - Total number of wins
-- Total number of retirements
 - Points from races (Does not include points from sprint races)
+
 You can optionally pass a season flag `-s` to display a driver's race results from any season, otherwise it will default to results from the current season.
 ## Roadmap
 This roadmap is very subject to change and includes a mix of big and small additions I'd like to add.
@@ -47,6 +51,10 @@ This roadmap is very subject to change and includes a mix of big and small addit
 - [ ] Add a new subcommand to display qualifying results over a weekend. This could also be added as a flag to the race results command.
 - [ ] Create a display to show a driver's performance at a specific track over their career or a custom range of seasons.
 - [ ] Show polesitters and winners at a given track over a range of seasons.
+- [ ] Even though I don't like them, it would be nice to have a way to display sprint results.
 - [ ] Cache API responses in a local SQL database. This is a really big feature and originates from my interest in learning more about databases.
+
+## Credits
+This app would not be possible without the awesome work done by the jolpica API project. If you like this app, please consider donating to their [Ko-fi](https://ko-fi.com/jolpicaf1) to help keep it running.
 ## License
 Pitbox is licensed under the [MIT License](LICENSE).

@@ -18,15 +18,15 @@ struct DriverAccumulator {
 /// Holds total and avg stats from a single season for one driver.
 pub struct DriverStats {
     pub code: String,
-    pub total_races: u32,
-    pub best_grid: u32,
-    pub best_finish: u32,
-    pub poles: u32,
-    pub wins: u32,
-    pub ret: u32,
-    pub points: f64,
     pub avg_grid: f64,
     pub avg_finish: f64,
+    pub best_grid: u32,
+    pub best_finish: u32,
+    pub total_races: u32,
+    pub ret: u32,
+    pub poles: u32,
+    pub wins: u32,
+    pub points: f64,
 }
 
 impl DriverStats {
@@ -34,13 +34,13 @@ impl DriverStats {
     pub fn from_race_table(race_table: &RaceTable) -> Self {
         let initial_counts = DriverAccumulator {
             races_finished: 0,
+            ret: 0,
             best_grid: u32::MAX,
             best_finish: u32::MAX,
             sum_of_grids: 0,
             sum_of_finishes: 0,
             poles: 0,
             wins: 0,
-            ret: 0,
             points: 0.0,
         };
 
@@ -70,7 +70,7 @@ impl DriverStats {
                 }
 
                 // Only count results when a driver finished a race.
-                if status == Some("Finished") {
+                if status == Some("Finished") || status == Some("Lapped") {
                     stats.races_finished += 1;
                     stats.best_finish = cmp::min(result.position, stats.best_finish);
                     stats.sum_of_finishes += result.position;
@@ -94,15 +94,15 @@ impl DriverStats {
         // Everything is moved to a single public struct for simple use by the caller.
         Self {
             code,
-            total_races,
-            best_grid: counts.best_grid,
-            best_finish: counts.best_finish,
-            poles: counts.poles,
-            wins: counts.wins,
-            ret: counts.ret,
-            points: counts.points,
             avg_grid,
             avg_finish,
+            best_grid: counts.best_grid,
+            best_finish: counts.best_finish,
+            total_races,
+            ret: counts.ret,
+            poles: counts.poles,
+            wins: counts.wins,
+            points: counts.points,
         }
     }
 }

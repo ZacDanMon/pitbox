@@ -136,14 +136,14 @@ pub fn print_race_results_table(race_table: &RaceTable) {
 pub fn print_driver_results_table(race_table: &[RaceTable]) {
     let mut table = build_table(vec![
         "Driver",
-        "Races",
-        "Best Grid",
-        "Best Finish",
         "Avg Grid",
         "Avg Finish",
+        "Best Grid",
+        "Best Finish",
+        "Races",
+        "RET",
         "Poles",
         "Wins",
-        "RET",
         "Points",
     ]);
 
@@ -151,19 +151,20 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
         .iter()
         .map(DriverStats::from_race_table)
         .collect();
+
     stats.sort_by(|x, y| y.points.total_cmp(&x.points));
 
     for s in stats.iter() {
         table.add_row(vec![
             &s.code,
-            &s.total_races.to_string(),
-            &s.best_grid.to_string(),
-            &s.best_finish.to_string(),
             &format!("{:.1}", s.avg_grid),
             &format!("{:.1}", s.avg_finish),
+            &s.best_grid.to_string(),
+            &s.best_finish.to_string(),
+            &s.total_races.to_string(),
+            &s.ret.to_string(),
             &s.poles.to_string(),
             &s.wins.to_string(),
-            &s.ret.to_string(),
             &s.points.to_string(),
         ]);
     }
