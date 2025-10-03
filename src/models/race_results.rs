@@ -3,6 +3,15 @@ use serde_with::{DisplayFromStr, serde_as};
 
 use crate::models::common::{Constructor, Driver};
 
+/// A driver's outcome from the `RaceResult`.
+pub enum RaceOutcome {
+    DidNotStart,
+    Disqualified,
+    Finished,
+    Retired,
+    Unknown,
+}
+
 // Corresponds to MRData, the entire JSON response.
 #[derive(Deserialize)]
 pub struct RaceResultsData {
@@ -88,6 +97,24 @@ impl RaceResult {
         match &self.time {
             Some(race_result_time) => &race_result_time.time,
             None => "",
+        }
+    }
+
+    /// Convert `position_text` to a `RaceOutcome`.
+    pub fn race_outcome(&self, position_text: &str) -> RaceOutcome {
+        // If the string is a number, the driver finished the race.
+        if position_text.parse::<i32>().is_ok() {
+            RaceOutcome::Finished
+        } else {
+            match position_text {
+                "W" => RaceOutcome::DidNotStart,
+                "D" => RaceOutcome::Disqualified,
+                "R" => RaceOutcome::Retired,
+                _ => {
+                    eprintln!("Unknown position_text: {position_text}");
+                    RaceOutcome::Unknown
+                }
+            }
         }
     }
 }

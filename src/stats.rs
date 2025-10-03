@@ -1,6 +1,6 @@
 use std::cmp;
 
-use crate::models::race_results::RaceTable;
+use crate::models::race_results::{RaceOutcome, RaceTable};
 
 /// Internal struct used to fold accumulated values.
 struct DriverAccumulator {
@@ -58,10 +58,14 @@ impl DriverStats {
             .iter()
             .fold(initial_counts, |mut stats, race| {
                 let result = &race.results[0];
-                let status = result.status.as_deref();
+                let status = result.race_outcome(&result.position_text);
 
-                // Count grids regardless of finishing status.
-                if let Some(g) = result.grid {
+                // There are some cases where a driver's grid is 0.
+                // We don't want to count that in the grid stats.
+                if result.grid.is_some_and(|g| g != 0) {
+                    // This should be fine, the is_some_and() call above ensures g is Some.
+                    let g = result.grid.expect("Grid is None, this should never happen");
+
                     stats.best_grid = cmp::min(g, stats.best_grid);
                     stats.sum_of_grids += g;
                     if g == 1 {
@@ -69,19 +73,21 @@ impl DriverStats {
                     }
                 }
 
-                // Only count results when a driver finished a race.
-                if status == Some("Finished") || status == Some("Lapped") {
-                    stats.races_finished += 1;
-                    stats.best_finish = cmp::min(result.position, stats.best_finish);
-                    stats.sum_of_finishes += result.position;
-                    stats.points += result.points;
+                match status {
+                    // Only count results when a driver finished a race.
+                    RaceOutcome::Finished => {
+                        stats.races_finished += 1;
+                        stats.best_finish = cmp::min(result.position, stats.best_finish);
+                        stats.sum_of_finishes += result.position;
+                        stats.points += result.points;
 
-                    if result.position == 1 {
-                        stats.wins += 1;
+                        if result.position == 1 {
+                            stats.wins += 1;
+                        }
                     }
-                } else if status == Some("Retired") {
-                    stats.ret += 1;
-                }
+                    RaceOutcome::Retired => stats.ret += 1,
+                    _ => (),
+                };
                 stats
             });
 

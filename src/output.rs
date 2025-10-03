@@ -4,7 +4,7 @@ use comfy_table::modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS};
 use comfy_table::{ContentArrangement, Table, TableComponent};
 use pitbox::models::constructor_standings::ConstructorStandingsTable;
 use pitbox::models::driver_standings::DriverStandingsTable;
-use pitbox::models::race_results::RaceTable;
+use pitbox::models::race_results::{RaceOutcome, RaceTable};
 use pitbox::stats::DriverStats;
 
 /// Remove this redundant substring from constructor names.
@@ -95,22 +95,22 @@ pub fn print_race_results_table(race_table: &RaceTable) {
             &r.driver.family_name,
             get_flag_emoji(&r.driver.nationality)
         );
-        let position = match r.position_text.as_str() {
-            "R" => "RET",
-            "D" => "DSQ",
-            "W" => "DNS",
-            _ => r.position_text.as_str(),
+        let finish_status = r.race_outcome(&r.position_text);
+        let position = match finish_status {
+            RaceOutcome::DidNotStart => "DNS",
+            RaceOutcome::Disqualified => "DSQ",
+            RaceOutcome::Retired => "RET",
+            _ => &r.position_text,
         };
 
         let laps_down = leader_laps - r.laps.unwrap_or_default();
-
-        let time_behind = match (laps_down, position) {
-            (_, "RET") => "DNF".to_string(),
-            (_, "DSQ") => "DSQ".to_string(),
-            (_, "DNS") => "DNS".to_string(),
-            (0, _) => r.get_time().to_string(),
-            (1, _) => format!("+{laps_down} lap"),
-            (_, _) => format!("+{laps_down} laps"),
+        let time_behind = match finish_status {
+            RaceOutcome::Finished => match laps_down {
+                0 => r.get_time(),
+                1 => &format!("+{laps_down} lap"),
+                _ => &format!("+{laps_down} laps"),
+            },
+            _ => position,
         };
 
         table.add_row(vec![
@@ -154,7 +154,7 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
 
     stats.sort_by(|x, y| y.points.total_cmp(&x.points));
 
-    for s in stats.iter() {
+    for s in &stats {
         table.add_row(vec![
             &s.code,
             &format!("{:.1}", s.avg_grid),
