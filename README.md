@@ -43,6 +43,7 @@ You can optionally pass a season flag `-s` to display a driver's race results fr
 ## Roadmap
 This roadmap is very subject to change and includes a mix of big and small additions I'd like to add.
 - [ ] Make some tests.
+- [ ] Better error handling.
 - [ ] Add a PKGBUILD to distribute through the AUR.
 - [ ] Add a way to provide a circuit name or country through a flag to race results.
 - [ ] Figure out some way to allow search of valid drivers/circuits for a given season with an easy way to select them to be used for a command.
