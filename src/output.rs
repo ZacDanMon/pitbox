@@ -61,8 +61,8 @@ pub fn print_constructor_standings_table(standings_table: &ConstructorStandingsT
     for s in &standings_table.standings[0].constructor_standings {
         let constructor_name = format!(
             "{} {}",
-            &s.constructor.name,
-            get_flag_emoji(&s.constructor.nationality)
+            &clean_constructor_name(&s.constructor.name),
+            &get_flag_emoji(&s.constructor.nationality)
         );
         table.add_row(vec![
             &s.position_text,
@@ -144,6 +144,7 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
         "RET",
         "Poles",
         "Wins",
+        "Podiums",
         "Points",
     ]);
 
@@ -165,6 +166,7 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
             &s.ret.to_string(),
             &s.poles.to_string(),
             &s.wins.to_string(),
+            &s.podiums.to_string(),
             &s.points.to_string(),
         ]);
     }

@@ -11,6 +11,7 @@ struct DriverAccumulator {
     sum_of_finishes: u32,
     poles: u32,
     wins: u32,
+    podiums: u32,
     ret: u32,
     points: f64,
 }
@@ -26,6 +27,7 @@ pub struct DriverStats {
     pub ret: u32,
     pub poles: u32,
     pub wins: u32,
+    pub podiums: u32,
     pub points: f64,
 }
 
@@ -41,6 +43,7 @@ impl DriverStats {
             sum_of_finishes: 0,
             poles: 0,
             wins: 0,
+            podiums: 0,
             points: 0.0,
         };
 
@@ -81,8 +84,11 @@ impl DriverStats {
                         stats.sum_of_finishes += result.position;
                         stats.points += result.points;
 
-                        if result.position == 1 {
-                            stats.wins += 1;
+                        if result.position <= 3 {
+                            stats.podiums += 1;
+                            if result.position == 1 {
+                                stats.wins += 1;
+                            }
                         }
                     }
                     RaceOutcome::Retired => stats.ret += 1,
@@ -108,6 +114,7 @@ impl DriverStats {
             ret: counts.ret,
             poles: counts.poles,
             wins: counts.wins,
+            podiums: counts.podiums,
             points: counts.points,
         }
     }
