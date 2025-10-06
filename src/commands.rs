@@ -1,6 +1,6 @@
-use pitbox::api::{self, AppResult};
-use pitbox::models::common::Driver;
-use pitbox::models::race_results::RaceTable;
+use pitbox::data::Driver;
+use pitbox::data::race_results::RaceTable;
+use pitbox::{self, AppResult};
 
 use crate::cli::{DriverArgs, ResultsArgs, StandingsArgs};
 use crate::output;
@@ -9,13 +9,13 @@ use crate::output;
 pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
     if args.drivers {
         output::print_driver_standings_table(
-            &api::fetch_driver_standings(&args.season)?
+            &pitbox::fetch_driver_standings(&args.season)?
                 .mr_data
                 .standings_table,
         );
     } else if args.constructors {
         output::print_constructor_standings_table(
-            &api::fetch_constructor_standings(&args.season)?
+            &pitbox::fetch_constructor_standings(&args.season)?
                 .mr_data
                 .standings_table,
         );
@@ -26,7 +26,7 @@ pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
 /// Process the results subcommand.
 pub fn run_race_results(args: &ResultsArgs) -> AppResult<()> {
     output::print_race_results_table(
-        &api::fetch_race_results(&args.season, &args.round)?
+        &pitbox::fetch_race_results(&args.season, &args.round)?
             .mr_data
             .race_table,
     );
@@ -36,7 +36,7 @@ pub fn run_race_results(args: &ResultsArgs) -> AppResult<()> {
 /// Process the driver subcommand.
 pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
     // First need to get the list of drivers from this season.
-    let drivers = api::fetch_drivers(&args.season)?
+    let drivers = pitbox::fetch_drivers(&args.season)?
         .mr_data
         .driver_table
         .drivers;
@@ -53,7 +53,7 @@ pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
 
     for d in &driver_ids {
         tables.push(
-            api::fetch_driver_results(&args.season, d)?
+            pitbox::fetch_driver_results(&args.season, d)?
                 .mr_data
                 .race_table,
         );

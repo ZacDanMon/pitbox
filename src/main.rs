@@ -1,5 +1,5 @@
 use clap::Parser;
-use pitbox::api::AppResult;
+use pitbox::AppResult;
 
 use cli::{Cli, Command};
 

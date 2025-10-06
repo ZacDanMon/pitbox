@@ -2,9 +2,9 @@ use std::{collections::HashMap, sync::LazyLock};
 
 use comfy_table::modifiers::{UTF8_ROUND_CORNERS, UTF8_SOLID_INNER_BORDERS};
 use comfy_table::{ContentArrangement, Table, TableComponent};
-use pitbox::models::constructor_standings::ConstructorStandingsTable;
-use pitbox::models::driver_standings::DriverStandingsTable;
-use pitbox::models::race_results::{RaceOutcome, RaceTable};
+use pitbox::data::constructor_standings::ConstructorStandingsTable;
+use pitbox::data::driver_standings::DriverStandingsTable;
+use pitbox::data::race_results::{RaceOutcome, RaceTable};
 use pitbox::stats::DriverStats;
 
 /// Remove this redundant substring from constructor names.
