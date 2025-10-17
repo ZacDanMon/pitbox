@@ -22,9 +22,13 @@ You can specify constructor standings with `-c`, or driver standings with `-d`. 
 ```bash
 pitbox standings -d -s 2016 -r 13
 ```
+
+![standings_screenshot](docs/images/standings.png)
 #### Race Results
 `pitbox results [options]`
 This command will display the race results of one race. No other part of the weekend is included in this output, only the race. The default race if no options are provided is the most recent race of the current season. This can be overridden by the season flag `-s` and/or the round flag `-r` to show the results from a particular season and a particular race.
+
+![results_screenshot](docs/images/results.png)
 #### Driver Results
 `pitbox driver -n <names> [options]`
 This command will display stats over a season for one or multiple drivers, giving you a way to compare driver performance. When multiple drivers are requested, they're displayed in descending order by total points. Currently these are the stats that are displayed for each driver:
@@ -39,6 +43,8 @@ This command will display stats over a season for one or multiple drivers, givin
 - Total number of wins
 - Total number of podiums
 - Points from races (Does not include points from sprint races)
+
+![driver_screenshot](docs/images/driver.png)
 
 You can optionally pass a season flag `-s` to display a driver's race results from any season, otherwise it will default to results from the current season.
 ## Roadmap
