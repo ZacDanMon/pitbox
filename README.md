@@ -44,7 +44,7 @@ This command will display stats over a season for one or multiple drivers, givin
 - Total number of podiums
 - Points from races (Does not include points from sprint races)
 
-![driver_screenshot](docs/images/driver.png)
+![driver_screenshot](docs/images/drivers.png)
 
 You can optionally pass a season flag `-s` to display a driver's race results from any season, otherwise it will default to results from the current season.
 ## Roadmap
