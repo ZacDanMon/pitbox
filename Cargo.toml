@@ -2,8 +2,11 @@
 name = "pitbox"
 version = "0.1.0"
 edition = "2024"
-description = "An F1 CLI that can output standings, results, and more. Provides a library to fetch F1 data from the Jolpica API"
+description = "An F1 CLI that can output standings, results, and more."
 license = "MIT"
+repository = "https://github.com/ZacDanMon/pitbox"
+keywords = ["f1", "formula1"]
+categories = ["command-line-interface"]
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
