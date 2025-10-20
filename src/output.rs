@@ -49,11 +49,7 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable, show_gap: 
         };
 
         let points = e.points.to_string();
-        let gap = if e.position == "1" {
-            "-".to_string()
-        } else {
-            (e.points - leader_points).to_string()
-        };
+        let gap = gap_text(leader_points, e.points);
 
         let mut row = vec![&e.position, &name, &constructor_name, &points];
 
@@ -90,11 +86,7 @@ pub fn print_constructor_standings_table(
         );
 
         let points = s.points.to_string();
-        let gap = if s.position_text == "1" {
-            "-".to_string()
-        } else {
-            (s.points - leader_points).to_string()
-        };
+        let gap = gap_text(leader_points, s.points);
 
         let mut row = vec![&s.position_text, &constructor_name, &points];
 
@@ -228,6 +220,20 @@ fn get_flag_emoji(key: &str) -> String {
         .map(String::as_str)
         .unwrap_or_default()
         .to_string()
+}
+
+/// Get String value of the gap.
+///
+/// Either the gap to the leader as a negative value,
+/// or "-" if gap is 0.
+fn gap_text(leader_points: f64, points: f64) -> String {
+    let gap = points - leader_points;
+
+    if gap != 0.0 {
+        gap.to_string()
+    } else {
+        "-".to_string()
+    }
 }
 
 /// Build a `comfy_table` for output with the provided headers.
