@@ -12,12 +12,14 @@ pub fn run_standings(args: &StandingsArgs) -> AppResult<()> {
             &pitbox::fetch_driver_standings(&args.season)?
                 .mr_data
                 .standings_table,
+            args.gap,
         );
     } else if args.constructors {
         output::print_constructor_standings_table(
             &pitbox::fetch_constructor_standings(&args.season)?
                 .mr_data
                 .standings_table,
+            args.gap,
         );
     }
     Ok(())

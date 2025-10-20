@@ -55,7 +55,7 @@ This roadmap is very subject to change and includes a mix of big and small addit
 - [ ] Add a way to provide a circuit name or country through a flag to race results.
 - [ ] Figure out some way to allow search of valid drivers/circuits for a given season with an easy way to select them to be used for a command.
 - [ ] Add a teammate flag to the driver results command to quickly compare teammates over a season.
-- [ ] For the standings output, add the gap to the leader as a new column, maybe as an optional flag to not clutter the table too much.
+- [x] For the standings output, add the gap to the leader as a new column, maybe as an optional flag to not clutter the table too much.
 - [ ] Add a new subcommand to display qualifying results over a weekend. This could also be added as a flag to the race results command.
 - [ ] Create a display to show a driver's performance at a specific track over their career or a custom range of seasons.
 - [ ] Show polesitters and winners at a given track over a range of seasons.
