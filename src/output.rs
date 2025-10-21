@@ -227,12 +227,9 @@ fn get_flag_emoji(key: &str) -> String {
 /// Either the gap to the leader as a negative value,
 /// or "-" if gap is 0.
 fn gap_text(leader_points: f64, points: f64) -> String {
-    let gap = points - leader_points;
-
-    if gap != 0.0 {
-        gap.to_string()
-    } else {
-        "-".to_string()
+    match points - leader_points {
+        0.0 => "-".to_owned(),
+        gap => gap.to_string(),
     }
 }
 
