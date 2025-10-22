@@ -23,8 +23,14 @@ static FLAGS: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
 });
 
 /// Print a pretty formatted table of F1 driver standings to stdout.
-pub fn print_driver_standings_table(standings: &DriverStandingsTable) {
-    let mut table = build_table(vec!["Pos", "Driver", "Constructor", "Points"]);
+pub fn print_driver_standings_table(standings: &DriverStandingsTable, show_gap: bool) {
+    let mut headers = vec!["Pos", "Driver", "Constructor", "Points"];
+    if show_gap {
+        headers.push("Gap");
+    }
+
+    let mut table = build_table(headers);
+    let leader_points = standings.standings[0].driver_standings[0].points;
 
     for e in &standings.standings[0].driver_standings {
         let name = format!(
@@ -42,12 +48,16 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable) {
             [.., last] => clean_constructor_name(&last.name),
         };
 
-        table.add_row(vec![
-            &e.position,
-            &name,
-            &constructor_name,
-            &e.points.to_string(),
-        ]);
+        let points = e.points.to_string();
+        let gap = gap_text(leader_points, e.points);
+
+        let mut row = vec![&e.position, &name, &constructor_name, &points];
+
+        if show_gap {
+            row.push(&gap);
+        }
+
+        table.add_row(row);
     }
 
     println!("F1 Drivers Standings 🏁");
@@ -55,8 +65,18 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable) {
 }
 
 /// Print a pretty formatted table of F1 constructor standings to stdout.
-pub fn print_constructor_standings_table(standings_table: &ConstructorStandingsTable) {
-    let mut table = build_table(vec!["Pos", "Constructor", "Points"]);
+pub fn print_constructor_standings_table(
+    standings_table: &ConstructorStandingsTable,
+    show_gap: bool,
+) {
+    let mut headers = vec!["Pos", "Constructor", "Points"];
+
+    if show_gap {
+        headers.push("Gap");
+    }
+
+    let mut table = build_table(headers);
+    let leader_points = standings_table.standings[0].constructor_standings[0].points;
 
     for s in &standings_table.standings[0].constructor_standings {
         let constructor_name = format!(
@@ -64,11 +84,17 @@ pub fn print_constructor_standings_table(standings_table: &ConstructorStandingsT
             &clean_constructor_name(&s.constructor.name),
             &get_flag_emoji(&s.constructor.nationality)
         );
-        table.add_row(vec![
-            &s.position_text,
-            &constructor_name,
-            &s.points.to_string(),
-        ]);
+
+        let points = s.points.to_string();
+        let gap = gap_text(leader_points, s.points);
+
+        let mut row = vec![&s.position_text, &constructor_name, &points];
+
+        if show_gap {
+            row.push(&gap);
+        }
+
+        table.add_row(row);
     }
 
     println!("F1 Constructors Standings 🏆");
@@ -194,6 +220,17 @@ fn get_flag_emoji(key: &str) -> String {
         .map(String::as_str)
         .unwrap_or_default()
         .to_string()
+}
+
+/// Get String value of the gap.
+///
+/// Either the gap to the leader as a negative value,
+/// or "-" if gap is 0.
+fn gap_text(leader_points: f64, points: f64) -> String {
+    match points - leader_points {
+        0.0 => "-".to_owned(),
+        gap => gap.to_string(),
+    }
 }
 
 /// Build a `comfy_table` for output with the provided headers.

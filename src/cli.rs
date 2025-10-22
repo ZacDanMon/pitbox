@@ -47,6 +47,10 @@ pub struct StandingsArgs {
     /// The season to display standings from.
     #[arg(short = 's', long = "season", default_value = "current")]
     pub season: String,
+
+    /// Show gap to leader.
+    #[arg(short = 'g', long = "gap")]
+    pub gap: bool,
 }
 
 #[derive(Debug, Args)]
