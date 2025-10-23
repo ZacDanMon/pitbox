@@ -45,7 +45,8 @@ pub fn run_driver_results(args: &DriverArgs) -> AppResult<()> {
     let mut driver_ids: Vec<String> = Vec::new();
 
     // Check if each driver passed as an arg matches to a driver.
-    for n in &args.name {
+    // TODO: Remove this unwrap() call when I handle the teammate flag.
+    for n in args.result_filter.name.as_ref().unwrap() {
         match get_driver_id(&drivers, n) {
             Some(id) => driver_ids.push(id),
             None => eprintln!("No driver found with name: {n}"),

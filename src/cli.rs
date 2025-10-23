@@ -70,9 +70,20 @@ pub struct DriverArgs {
     #[arg(short = 's', long = "season", default_value = "current")]
     pub season: String,
 
+    #[command(flatten)]
+    pub result_filter: ResultFilter,
+}
+
+#[derive(Debug, Args)]
+#[group(required = true, multiple = false)]
+pub struct ResultFilter {
+    /// Show driver results from this constructor.
+    #[arg(short = 'c', long = "constructor", conflicts_with = "name")]
+    pub constructor: Option<String>,
+
     /// The names of drivers to display season results, comma separated.
     /// Can be either the start of a driver's last name, or the 3 character
     /// driver identifier code.
     #[arg(short = 'n', long = "name", value_delimiter = ',', num_args = 1..)]
-    pub name: Vec<String>,
+    pub name: Option<Vec<String>>,
 }
