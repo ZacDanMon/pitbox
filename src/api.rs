@@ -57,3 +57,13 @@ pub fn fetch_driver_results(season: &str, driver: &str) -> AppResult<ApiResponse
 pub fn fetch_drivers(season: &str) -> AppResult<ApiResponse<DriverData>> {
     fetch(&format!("{BASE_URL}/{season}/drivers/"))
 }
+
+/// Fetches all drivers that raced in a given season for this constructor.
+pub fn fetch_drivers_constructor(
+    season: &str,
+    constructor: &str,
+) -> AppResult<ApiResponse<DriverData>> {
+    fetch(&format!(
+        "{BASE_URL}/{season}/constructors/{constructor}/drivers/"
+    ))
+}

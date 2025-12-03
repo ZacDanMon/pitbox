@@ -14,4 +14,5 @@ pub use crate::api::fetch_constructor_standings;
 pub use crate::api::fetch_driver_results;
 pub use crate::api::fetch_driver_standings;
 pub use crate::api::fetch_drivers;
+pub use crate::api::fetch_drivers_constructor;
 pub use crate::api::fetch_race_results;
