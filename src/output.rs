@@ -51,10 +51,15 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable, show_gap: 
         let points = e.points.to_string();
         let gap = gap_text(leader_points, e.points);
 
-        let mut row = vec![&e.position, &name, &constructor_name, &points];
+        let mut row = vec![
+            e.position.as_deref().unwrap_or("-").into(),
+            name,
+            constructor_name,
+            points,
+        ];
 
         if show_gap {
-            row.push(&gap);
+            row.push(gap);
         }
 
         table.add_row(row);
