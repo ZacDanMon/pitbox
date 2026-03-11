@@ -93,10 +93,10 @@ pub fn print_constructor_standings_table(
         let points = s.points.to_string();
         let gap = gap_text(leader_points, s.points);
 
-        let mut row = vec![&s.position_text, &constructor_name, &points];
+        let mut row = vec![s.position_text, constructor_name, points];
 
         if show_gap {
-            row.push(&gap);
+            row.push(gap);
         }
 
         table.add_row(row);
