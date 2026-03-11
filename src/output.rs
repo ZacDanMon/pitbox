@@ -43,19 +43,18 @@ pub fn print_driver_standings_table(standings: &DriverStandingsTable, show_gap: 
         // For cases where a driver raced for multiple constructors in a season,
         // only display the last one.
         let constructor_name = match e.constructors.as_slice() {
-            [] => "Unknown".to_string(),
+            [] => "Unknown".into(),
             [only] => clean_constructor_name(&only.name),
             [.., last] => clean_constructor_name(&last.name),
         };
 
-        let points = e.points.to_string();
         let gap = gap_text(leader_points, e.points);
 
         let mut row = vec![
             e.position.as_deref().unwrap_or("-").into(),
             name,
             constructor_name,
-            points,
+            e.points.to_string(),
         ];
 
         if show_gap {
@@ -90,10 +89,13 @@ pub fn print_constructor_standings_table(
             &get_flag_emoji(&s.constructor.nationality)
         );
 
-        let points = s.points.to_string();
         let gap = gap_text(leader_points, s.points);
 
-        let mut row = vec![s.position_text, constructor_name, points];
+        let mut row = vec![
+            s.position_text.to_owned(),
+            constructor_name,
+            s.points.to_string(),
+        ];
 
         if show_gap {
             row.push(gap);
@@ -145,12 +147,12 @@ pub fn print_race_results_table(race_table: &RaceTable) {
         };
 
         table.add_row(vec![
-            position,
-            &name,
-            &clean_constructor_name(&r.constructor.name),
-            &time_behind,
-            &r.grid.unwrap_or_default().to_string(),
-            &r.points.to_string(),
+            position.into(),
+            name,
+            clean_constructor_name(&r.constructor.name),
+            time_behind.into(),
+            r.grid.unwrap_or_default().to_string(),
+            r.points.to_string(),
         ]);
     }
 
@@ -188,17 +190,17 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
 
     for s in &stats {
         table.add_row(vec![
-            &s.code,
-            &format!("{:.1}", s.avg_grid),
-            &format!("{:.1}", s.avg_finish),
-            &s.best_grid.to_string(),
-            &s.best_finish.to_string(),
-            &s.total_races.to_string(),
-            &s.ret.to_string(),
-            &s.poles.to_string(),
-            &s.wins.to_string(),
-            &s.podiums.to_string(),
-            &s.points.to_string(),
+            s.code.to_owned(),
+            format!("{:.1}", s.avg_grid),
+            format!("{:.1}", s.avg_finish),
+            s.best_grid.to_string(),
+            s.best_finish.to_string(),
+            s.total_races.to_string(),
+            s.ret.to_string(),
+            s.poles.to_string(),
+            s.wins.to_string(),
+            s.podiums.to_string(),
+            s.points.to_string(),
         ]);
     }
     println!("Driver Results",);
