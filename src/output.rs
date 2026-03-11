@@ -7,9 +7,6 @@ use pitbox::data::driver_standings::DriverStandingsTable;
 use pitbox::data::race_results::{RaceOutcome, RaceTable};
 use pitbox::stats::DriverStats;
 
-/// Remove this redundant substring from constructor names.
-const REMOVE_STR: &str = "F1 Team";
-
 /// Mapping of nationalities to country names read from `nationality.toml`.
 static NATIONALITIES: LazyLock<HashMap<String, String>> = LazyLock::new(|| {
     let toml = include_str!("../resources/nationality.toml");
@@ -211,7 +208,7 @@ pub fn print_driver_results_table(race_table: &[RaceTable]) {
 ///
 /// # Returns a new string with "F1 Team" removed from the name.
 fn clean_constructor_name(name: &str) -> String {
-    name.replace(REMOVE_STR, "")
+    name.replace("F1 Team", "")
 }
 
 /// Lookup the country flag using a nation key.
